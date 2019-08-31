@@ -1,0 +1,44 @@
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto-Light.woff') format('woff'),
+         url('fonts/Roboto-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+* {
+    font-family: Roboto;
+}
+
+button {
+    background: rgb(255, 255, 255);
+    border: none;
+    box-shadow: 1px 2px 0px 0px #7c7c9080;
+    padding: 1% 5%;
+    border: 1px solid #00000012;
+    font-size: 0.75em;
+    margin: 1%;
+}
+button:hover {
+    background: #e4e3e324;
+    cursor: pointer;
+    margin: 0.5%;
+    padding: 1.5% 5.5%;
+}
+button.blue {
+    background: #a5a5f452;
+    color: #6c6ca0;
+    box-shadow: 1px 2px 0px 0px #9393ff80;
+}
+button.blue:hover {
+    background: #8282c452
+}
+button.red {
+    background: #f4a5a552;
+    color: #a06c6c;
+    box-shadow: 1px 2px 0px 0px #ff939380;
+}
+button.red:hover {
+    background: #ca858552
+}

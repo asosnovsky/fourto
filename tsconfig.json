@@ -1,0 +1,22 @@
+{
+    "include": ["src/**/*"],
+    "compilerOptions": {
+        "target": "es5",
+        "jsx": "react",
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "importHelpers": true,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "rootDir": ".",
+        "baseUrl": "./",
+        "allowJs": false,
+        "lib": [
+            "es6", "dom", "es2017"
+        ],
+        "paths": {
+            "~/*": ["src/*"]
+        }
+    }
+}

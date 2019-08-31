@@ -1,0 +1,38 @@
+.open-pieces {
+    display: grid;
+    @media (orientation:landscape) {
+        grid-template-columns: repeat(2, 6vw [col-start]);
+        grid-template-rows: repeat(8, 6vw [col-start]);
+    }
+    @media (orientation:portrait) {
+        grid-template-columns: repeat(4, 11vw [col-start]);
+        grid-template-rows: repeat(4, 11vw [col-start]);
+    }
+    align-items: center;
+    justify-items: center;
+    grid-gap: 1%;
+
+    > * {
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-items: center;
+        vertical-align: middle;
+        text-align: center;
+        box-shadow: 0px 0px 15px 0px #0003;
+        transition: all 0.5s;
+    }
+    > :hover {
+        background: rgba(151, 255, 142, 0.251);
+        cursor: pointer;
+    }
+    > .highlight {
+        background: rgba(255, 142, 159, 0.5);
+    }
+    > .highlight:hover {
+        background: rgba(151, 255, 142, 0.5);
+    }
+    > .shadded {
+        filter: blur(2.5px);
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "name": "FourTO",
+    "short_name": "FT",
+    "theme_color": "#f32121",
+    "background_color": "#008eff",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/icon.svg"
+        }
+    ]
+}

@@ -1,0 +1,66 @@
+@import "./style.scss";
+
+$board_size: 70vw;
+$board_size_max: 70vh;
+
+#app {
+    display: grid;
+    @media (orientation:landscape) {
+        grid-template:
+        'navbar navbar'
+        'board open'  / $board_size 5vw
+        ;
+        
+    }
+    @media (orientation:portrait) {
+        grid-template:
+        '. navbar .'
+        '. board .'
+        '. open .' / 2vw 80% 2vw;
+    }
+    // grid-template-rows: 15vh;
+    grid-column-gap: 2.5vw;
+    grid-row-gap: 2.5vh;
+    
+    .board {
+        grid-area: board;
+        max-width: $board_size_max;
+        max-height: $board_size_max;
+        width: $board_size;
+        height: $board_size;
+    }
+    
+    .open-pieces {
+        grid-area: open;
+        // width: 100vw;
+        // height: $board_size;
+    }
+    
+    .navbar {
+        grid-area: navbar;
+        display: grid;
+        grid-template: "." "p" "b" ".";
+        grid-template-rows: 2vh 4vh 3vh 2vh;
+        // grid-gap: 2.5%;
+        font-size: 3vh;
+
+        button {
+            font-size: 2vh;
+        }
+    }
+    
+    .cover {
+        padding-top: 25vh;
+        background: #ffffff7d;
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        div {
+            width: 50vw;
+            margin-left: 25vw;
+            background: #fff9;
+            padding: 3vw;
+        }
+    }
+}
