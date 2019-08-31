@@ -70,3 +70,6 @@ node_modules/
 # parcel build
 dist
 build
+
+# secrets
+src/confg/_secrets.ts
