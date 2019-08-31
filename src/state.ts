@@ -3,8 +3,6 @@ import { observable, action, computed } from "mobx";
 import { GamePieceOptions } from "~/components/GamePiece";
 import { bannerState } from '~/components/TextBanner';
 import { database, getUID } from "~/database";
-console.log(database)
-
 
 class GameWinState {
     constructor(
@@ -109,7 +107,6 @@ class GameState {
     private checkUpdateWin() {
         this.winState = this.checkWin();
         if (this.winState.won) {
-            console.log(this.winState);
             console.log(this.spots.map(
                 row => row.map(
                     c => c === null ? "----" : Object.keys(c).map( k=> Number(c[k]) ).join("") 
@@ -151,13 +148,11 @@ class GameState {
             for(key in statsH) {
                 if( n[0] === 4  ) {
                     if( (statsH[key] == 4) || (statsH[key] == 0) ) {
-                        console.log(statsH);
                         return new GameWinState(true, 'v', x);
                     }
                 }
                 if( n[1] === 4 ) {
                     if( (statsV[key] == 4) || (statsV[key] == 0) ) {
-                        console.log(statsV);
                         return new GameWinState(true, 'h', x);
                     }
                 } 

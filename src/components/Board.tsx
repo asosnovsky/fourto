@@ -26,19 +26,6 @@ export default observer(() => {
                         gameState.placeGamePiece(rIdx, cIdx);
                     }
                 }}/>
-            // }   else   if (gameState.winState.won) {
-                // let highlighted = false;
-                // if ( gameState.winState.wtype === "l" ) {
-                //     return rIdx === cIdx;
-                // }   else if (gameState.winState.wtype === "r") {
-                //     return rIdx + cIdx === 3
-                // }   else if (gameState.winState.wtype === "h") {
-                //     console.log(rIdx, gameState.winState.wref);
-                //     return rIdx === gameState.winState.wref;
-                // }   else if (gameState.winState.wtype === "v") {
-                //     return cIdx === gameState.winState.wref;
-                // };
-                // return <GamePiece key={key} row={rIdx} col={cIdx}  highlight={highlighted} shadded={!highlighted} {...gp}/>
             }   else    {
                 return <GamePiece key={key} row={rIdx} col={cIdx} {...gp}/>
             }
