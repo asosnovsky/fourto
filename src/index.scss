@@ -5,6 +5,8 @@ $board_size_max: 70vh;
 
 #app {
     display: grid;
+    justify-items: center;
+
     @media (orientation:landscape) {
         grid-template:
         'navbar navbar'
@@ -14,9 +16,9 @@ $board_size_max: 70vh;
     }
     @media (orientation:portrait) {
         grid-template:
-        '. navbar .'
-        '. board .'
-        '. open .' / 2vw 80% 2vw;
+        'navbar'
+        'board'
+        'open';
     }
     // grid-template-rows: 15vh;
     grid-column-gap: 2.5vw;
@@ -39,13 +41,16 @@ $board_size_max: 70vh;
     .navbar {
         grid-area: navbar;
         display: grid;
-        grid-template: "." "p" "b" ".";
-        grid-template-rows: 2vh 4vh 3vh 2vh;
-        // grid-gap: 2.5%;
+        grid-template: "p" "b";
         font-size: 3vh;
+        width: 100%;
+        justify-content: center;
 
-        button {
-            font-size: 2vh;
+        .nav-buttons {
+            grid-area: b;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr [col-start]);
+            font-size: 2.5vh;
         }
     }
     

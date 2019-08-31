@@ -12,7 +12,7 @@ const Navbar = observer(() => {
         <div style={{"gridArea": "p"}}>
             <span>Current Player: </span><span style={{"fontWeight": "bold"}}>Player {gameState.currentPlayer + 1}</span> 
         </div>
-        <div style={{"gridArea": "b"}}>
+        <div className="nav-buttons">
             <button className="blue" onClick={() => gameState.undo()}>Undo Last Move</button>       
             <button className="red" onClick={() => {
                 gameState.reset();
