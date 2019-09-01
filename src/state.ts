@@ -121,7 +121,7 @@ export class GameState {
         }   else {
             this.currentPlayer = 0;
         }
-        bannerState.notify(`Player ${gameState.currentPlayer + 1} turn!`, 2000);
+        bannerState.notify(`Player ${this.currentPlayer + 1} turn!`, 2000);
     }
     private checkUpdateWin() {
         this.winState = this.checkWin();
