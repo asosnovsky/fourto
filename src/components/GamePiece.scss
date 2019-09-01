@@ -48,10 +48,19 @@
     display: initial;
     box-shadow: 2px 5px 2px 5px rgba(0,0,0,.14) inset;
 }
-.game-piece.tall > .fire {
-    opacity: 1;
-    filter: drop-shadow(5px 6px 3px rgba(0, 0, 0, 0.35));
+$tall_dim: 10px;
+.game-piece.tall > .shape {
+    background-image: linear-gradient(335deg, #aaaa 0.4*$tall_dim, transparent 0.4*$tall_dim),
+        linear-gradient(155deg, #ccca 0.4*$tall_dim, transparent 0.4*$tall_dim),
+        linear-gradient(335deg, #aaaa 0.4*$tall_dim, transparent 0.4*$tall_dim),
+        linear-gradient(155deg, #ccca 0.4*$tall_dim, transparent 0.4*$tall_dim);
+    background-position: 0px 0.02*$tall_dim, 0.04*$tall_dim 0.6*$tall_dim, 0.5*$tall_dim 0.53*$tall_dim, 0.58*$tall_dim 0.06*$tall_dim;
+    background-size: $tall_dim $tall_dim;
 }
+// .game-piece.tall > .fire {
+//     opacity: 1;
+//     filter: drop-shadow(5px 6px 3px rgba(0, 0, 0, 0.35));
+// }
 // .game-piece.tall > .shape {
 //     border-style: groove;
 //     border-color: #bfaeaeba;
