@@ -33,8 +33,8 @@ export class GameState {
     @observable stagePiece: number | null = null;
     @observable currentPlayer: PlayerId = Math.random() < 0.5 ? 0 : 1;
     @observable winState: GameWinState = { won: false };
+    @observable lastPiece: number[] | null = null;
 
-    private lastPiece: number[] | null = null;
     private gameId: firebase.database.Reference;
     private currentTurn: number;
 

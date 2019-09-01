@@ -22,6 +22,7 @@ export default class GamePage extends Route {
                 winState={this.localGameState.winState}
                 currentPlayer={this.localGameState.currentPlayer}
                 spots={this.localGameState.spots}
+                hightlighted={this.localGameState.lastPiece}
                 onPlace={(x,y) => this.localGameState.placeGamePiece(x,y)}
                 onResetGame={() => this.localGameState.reset()}
             />

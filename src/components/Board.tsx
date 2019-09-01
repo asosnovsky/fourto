@@ -3,11 +3,13 @@ import { GamePiece } from "~/components/GamePiece";
 import { PlayerId, GameWinState, BoardGamePieces } from "~/state";
 
 import "./Board.scss";
+import { number } from 'prop-types';
 
 export interface Props {
     winState: GameWinState,
     currentPlayer: PlayerId,
     spots: BoardGamePieces,
+    hightlighted: number[] | null,
     onResetGame: () => void,
     onPlace: (x: number, y: number) => void,
 }
@@ -28,9 +30,15 @@ export default  function Board ( props: Props ) {
             if (gp === null) {
                 return <div key={key} id={`bp${rIdx}${cIdx}`} onClick={() => {
                     props.onPlace(rIdx, cIdx);
-                }}/>
+                }}>{rIdx},{cIdx}</div>
             }   else    {
-                return <GamePiece key={key} row={rIdx} col={cIdx} {...gp}/>
+                return <GamePiece key={key} 
+                    highlight={props.hightlighted === null ? false : (
+                        (props.hightlighted[0] == rIdx) &&
+                        (props.hightlighted[1] == cIdx)
+                    ) } 
+                    row={rIdx} col={cIdx} {...gp}
+                />
             }
         } ) )}
     </div>
