@@ -2,9 +2,10 @@ import * as React from "react";
 import { render } from "react-dom";
 
 import TextBanner from "~/components/TextBanner";
-import GamePage from "~/pages/Game";
+// import GamePage from "~/pages/Game";
+import AppRouter from "~/router";
 
 render(<>
     <TextBanner/>
-    <GamePage/>
+    <AppRouter/>
 </>, document.getElementById("app"));

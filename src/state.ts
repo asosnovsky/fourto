@@ -4,15 +4,22 @@ import { GamePieceOptions } from "~/components/GamePiece";
 import { bannerState } from '~/components/TextBanner';
 import { database, getUID } from "~/database";
 
-class GameWinState {
-    constructor(
-        public won: boolean, 
-        public wtype: "l" | "r" | "h" | "v" | null = null, 
-        public wref: number | null = null
-    ) {}
+export type GameWinState = {
+    won: false;
+} | {
+    won: true;
+    wtype: "h" | "v"
+    wref: number;
+} | {
+    won: true;
+    wtype: "l" | "r";
 }
+export type GamePieceInSpot = GamePieceOptions | null;
+export type GamePieceList = GamePieceInSpot[];
+export type BoardGamePieces = GamePieceInSpot[][];
+export type PlayerId = 0 | 1;
 
-const stringifyGamePiece = (gp: GamePieceOptions | null) => {
+const stringifyGamePiece = (gp: GamePieceInSpot) => {
     if (gp === null ) {
         return "----" 
     } else {
@@ -20,24 +27,23 @@ const stringifyGamePiece = (gp: GamePieceOptions | null) => {
     };
 }
 
-class GameState {
-    @observable spots: Array<Array<GamePieceOptions | null>> = [];
-    @observable gamePieces: Array<GamePieceOptions | null> = [];
+export class GameState {
+    @observable spots: BoardGamePieces = [];
+    @observable gamePieces: GamePieceList = [];
     @observable stagePiece: number | null = null;
-    @observable currentPlayer: 0 | 1 = Math.random() < 0.5 ? 0 : 1;
-    @observable winState: GameWinState = new GameWinState(false);
+    @observable currentPlayer: PlayerId = Math.random() < 0.5 ? 0 : 1;
+    @observable winState: GameWinState = { won: false };
 
     private lastPiece: number[] | null = null;
     private gameId: firebase.database.Reference;
     private currentTurn: number;
 
-    constructor() { this.reset(); }
     @action reset() {
         this.spots = [];
         this.gamePieces = [];
         this.stagePiece = null;
         this.currentPlayer = Math.random() < 0.5 ? 0 : 1;
-        this.winState = new GameWinState(false);
+        this.winState = { won: false };
         this.lastPiece = null;
         this.gameId = undefined;
         this.currentTurn = 0;
@@ -51,13 +57,17 @@ class GameState {
         bannerState.notify(`Player ${this.currentPlayer + 1} starts the game!`, 1500);
     }
     @action placeGamePiece(x: number, y: number) {
-        this.log(`${this.currentPlayer}|p|${x},${y}`);
-        const gp = this.gamePieces[this.stagePiece];
-        this.gamePieces[this.stagePiece] = null;
-        this.spots[x][y] = gp;
-        this.lastPiece = [x,y,this.stagePiece];
-        this.stagePiece = null;
-        this.checkUpdateWin();
+        if (this.stagePiece !== null) {
+            this.log(`${this.currentPlayer}|p|${x},${y}`);
+            const gp = this.gamePieces[this.stagePiece];
+            this.gamePieces[this.stagePiece] = null;
+            this.spots[x][y] = gp;
+            this.lastPiece = [x,y,this.stagePiece];
+            this.stagePiece = null;
+            this.checkUpdateWin();
+        }   else    {
+            console.warn("stagePiece === null")
+        }
     }
     @action undo() {
         if (this.stagePiece !== null) {
@@ -84,8 +94,17 @@ class GameState {
             }   else    {
                 bannerState.notify("Err: G[stagePiece] !== null", 5000)
             }
-        }   else    {
-            bannerState.notify("Err: stagePiece !== null", 5000)
+        }else{
+            console.warn("stagePiece !== null")
+        }
+    }
+    toJson() {
+        return {
+            spots: this.spots,
+            gamePieces: this.gamePieces,
+            stagePiece: this.stagePiece,
+            currentPlayer: this.currentPlayer,
+            winState: this.winState,
         }
     }
     private async log(action: string) {
@@ -115,7 +134,7 @@ class GameState {
             this.log(`${this.currentPlayer}|w|${this.winState.wtype}|${this.winState.wref}`);
         }
     }
-    private checkWin() {
+    private checkWin() : GameWinState {
         type Stats = Record<keyof GamePieceOptions, number>; 
         const updateStats = (stats: Stats, v: GamePieceOptions) => {
             stats.hole += ( v.hole ? 1 : 0 );
@@ -148,12 +167,12 @@ class GameState {
             for(key in statsH) {
                 if( n[0] === 4  ) {
                     if( (statsH[key] == 4) || (statsH[key] == 0) ) {
-                        return new GameWinState(true, 'v', x);
+                        return { won: true, wtype: 'v', wref: x };
                     }
                 }
                 if( n[1] === 4 ) {
                     if( (statsV[key] == 4) || (statsV[key] == 0) ) {
-                        return new GameWinState(true, 'h', x);
+                        return { won: true, wtype: 'h', wref: x };
                     }
                 } 
             }
@@ -169,23 +188,21 @@ class GameState {
             if ( s2 !== null ) { updateStats(stats2, s2); n[1] += 1; };
         }
         if ( (n[0] === 0) && (n[1] === 0) ) {
-            return new GameWinState(false, null, null);
+            return { won: false };
         }
         let key: keyof GamePieceOptions;
         for(key in stats1) {
             if (n[0] === 4) {
                 if( (stats1[key] == 4) || (stats1[key] == 0) ) {
-                    return new GameWinState(true, 'l', null);
+                    return { won: true, wtype: 'l' };
                 }
             }
             if (n[1] === 4) {
                 if( (stats2[key] == 4) || (stats2[key] == 0) ) {
-                    return new GameWinState(true, 'r', null);
+                    return { won: true, wtype: 'r' };
                 }
             }
         }
-        return new GameWinState(false, null, null);
+        return { won: false };
     }
 }
-
-export const gameState = new GameState();

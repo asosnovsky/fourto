@@ -1,22 +1,26 @@
 import * as React from "react";
-import { observer } from "mobx-react";
 import { GamePiece } from "~/components/GamePiece";
-import { gameState } from "~/state";
+import { GamePieceList } from "~/state";
 
 import "./OpenPieces.scss";
 
-export default observer(() => {
+export interface Props {
+    gamePieces: GamePieceList;
+    focusPiece: number | null;
+    onTake: (i: number) => void;
+}
+export default (props: Props) => {
     return <div className="open-pieces">
-        {gameState.gamePieces.map( (gp, i) => {
+        {props.gamePieces.map( (gp, i) => {
             const rIdx = Math.floor(i / 2);
             const cIdx= i % 2;
             const key = [rIdx, cIdx].join("");
             if (gp !== null) {
                 return <GamePiece key={key} row={rIdx} col={cIdx}
-                            highlight={gameState.stagePiece === i} 
-                            shadded={gameState.stagePiece !== null ? gameState.stagePiece !== i : false} {...gp} 
+                            highlight={props.focusPiece === i} 
+                            shadded={props.focusPiece !== null ? props.focusPiece !== i : false} {...gp} 
                     onClick={() => {
-                        gameState.givePiece(i)
+                        props.onTake(i)
                     }
                 }/>
             }   else    {
@@ -24,4 +28,4 @@ export default observer(() => {
             }
         } )}
     </div>
-})
+}

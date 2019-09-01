@@ -1,34 +1,37 @@
 import * as React from "react";
-import { observer } from "mobx-react";
 import { GamePiece } from "~/components/GamePiece";
-import { bannerState } from "~/components/TextBanner";
-import { gameState } from "~/state";
+import { PlayerId, GameWinState, GamePieceList, BoardGamePieces } from "~/state";
 
 import "./Board.scss";
 
-export default observer(() => {
+export interface Props {
+    winState: GameWinState,
+    currentPlayer: PlayerId,
+    spots: BoardGamePieces,
+    onResetGame: () => void,
+    onPlace: (x: number, y: number) => void,
+}
+export default ( props: Props ) => {
     return <div className="board">
         <div className="cover" style={{
-            display: gameState.winState.won ? 'initial' : 'none'
+            display: props.winState.won ? 'initial' : 'none'
         }}>
             <div>
-                <span>Player #{gameState.currentPlayer + 1} has won!</span>
+                <span>Player #{props.currentPlayer + 1} has won!</span>
                 <button onClick={()=>{
-                    gameState.reset();
+                    props.onResetGame();
                 }}>Play Again?</button>
             </div>
         </div>
-        {gameState.spots.map( (row, rIdx) => row.map( (gp, cIdx) => {
+        {props.spots.map( (row, rIdx) => row.map( (gp, cIdx) => {
             const key = [rIdx, cIdx].join("");
             if (gp === null) {
                 return <div key={key} id={`bp${rIdx}${cIdx}`} onClick={() => {
-                    if (gameState.stagePiece !== null) {
-                        gameState.placeGamePiece(rIdx, cIdx);
-                    }
+                    props.onPlace(rIdx, cIdx);
                 }}/>
             }   else    {
                 return <GamePiece key={key} row={rIdx} col={cIdx} {...gp}/>
             }
         } ) )}
     </div>
-})
+}
