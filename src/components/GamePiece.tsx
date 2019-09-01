@@ -14,7 +14,7 @@ export interface GamePieceProps extends Partial<GamePieceOptions> {
     shadded?: boolean;
     onClick?: () => void;
 };
-export const GamePiece = (props: GamePieceProps) => {
+export function GamePiece(props: GamePieceProps) {
     let className = "game-piece";
     if (props.circle) {
         className += " circle"

@@ -13,7 +13,7 @@ import { GameState } from '~/state';
 @observer
 export default class GamePage extends Route {
     localGameState = new GameState();
-    componentWillMount() {
+    componentDidMount() {
         this.localGameState.reset();
     }
     render() {

@@ -9,7 +9,7 @@ export interface Props {
     focusPiece: number | null;
     onTake: (i: number) => void;
 }
-export default (props: Props) => {
+export default function OpenPieces(props: Props) {
     return <div className="open-pieces">
         {props.gamePieces.map( (gp, i) => {
             const rIdx = Math.floor(i / 2);

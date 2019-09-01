@@ -1,6 +1,6 @@
 import * as React from "react";
 import { GamePiece } from "~/components/GamePiece";
-import { PlayerId, GameWinState, GamePieceList, BoardGamePieces } from "~/state";
+import { PlayerId, GameWinState, BoardGamePieces } from "~/state";
 
 import "./Board.scss";
 
@@ -11,7 +11,7 @@ export interface Props {
     onResetGame: () => void,
     onPlace: (x: number, y: number) => void,
 }
-export default ( props: Props ) => {
+export default  function Board ( props: Props ) {
     return <div className="board">
         <div className="cover" style={{
             display: props.winState.won ? 'initial' : 'none'

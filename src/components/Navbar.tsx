@@ -9,7 +9,7 @@ export interface Props {
     onResetGame: () => void;
     onUndo: () => void;
 }
-export default (props: Props) => {
+export default function Navbar (props: Props) {
     return <div className="navbar">
         <div style={{"gridArea": "p"}}>
             <span>Current Player: </span><span style={{"fontWeight": "bold"}}>Player {props.currentPlayer + 1}</span> 

@@ -17,7 +17,7 @@ class BannerState {
     }
 }
 export const bannerState = new BannerState();
-export default observer(() => {
+export default observer(function TextBanner () {
     return <div className="text-banner" style={{ 
             // height: bannerState.show ? '25vh' : '0vh',
             // width: bannerState.show ? '100vw' : '0vw',
