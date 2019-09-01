@@ -37,7 +37,7 @@ export function GamePiece(props: GamePieceProps) {
     return <div className={className} id={`bp${props.row}${props.col}`} onClick={props.onClick}>
         <div className="shape"></div>
         <div className="hole"></div>
-        <svg className="fire" viewBox="0 0 512 512" preserveAspectRatio="xMidYMin" width="100%">
+        {/* <svg className="fire" viewBox="0 0 512 512" preserveAspectRatio="xMidYMin" width="100%">
             <g>
                 <path style={{ fill: "#FFB446" }} d="M97.103,353.103C97.103,440.86,168.244,512,256,512l0,0c87.756,0,158.897-71.14,158.897-158.897
                 c0-88.276-44.138-158.897-14.524-220.69c0,0-47.27,8.828-73.752,79.448c0,0-88.276-88.276-51.394-211.862
@@ -50,6 +50,6 @@ export function GamePiece(props: GamePieceProps) {
                 l0,0c39.284,0,70.729-32.097,70.62-71.381c-0.295-105.508-61.792-158.136-61.792-158.136c8.828,52.966-17.655,79.448-17.655,79.448
                 C236.141,345.385,211.862,335.448,211.862,335.448z"/>
             </g>
-        </svg>
+        </svg> */}
     </div>
 }

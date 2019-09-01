@@ -10,7 +10,7 @@
     }
 
     > .shape {
-        background: #f83a3abb;
+        background: #F00;
         height: $shape_radius;
         width: $shape_radius;
         top: (100%-$shape_radius)/2;
@@ -42,13 +42,13 @@
     border-radius: 50%;
 }
 .game-piece.black > .shape {
-    background: #8e5eff40;
+    background: #00F;
 }
 .game-piece.hole > .hole {
     display: initial;
     box-shadow: 2px 5px 2px 5px rgba(0,0,0,.14) inset;
 }
-$tall_dim: 10px;
+$tall_dim: 15px;
 .game-piece.tall > .shape {
     background-image: linear-gradient(335deg, #aaaa 0.4*$tall_dim, transparent 0.4*$tall_dim),
         linear-gradient(155deg, #ccca 0.4*$tall_dim, transparent 0.4*$tall_dim),
