@@ -1,4 +1,5 @@
 import * as React from "react";
+import { history } from '~/router';
 
 export interface Props {
     onResetGame: () => void;
@@ -7,6 +8,7 @@ export interface Props {
 export default function Navbar (props: Props) {
     return <div className="navbar">
         <div className="nav-buttons">
+            <button onClick={() => history.push("/")} >&larr;</button>
             <button className="blue" onClick={() => props.onUndo()}>Undo Last Move</button>       
             <button className="red" onClick={() => {
                 props.onResetGame();
