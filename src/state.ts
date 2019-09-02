@@ -38,8 +38,10 @@ export class GameState {
 
     private gameId: firebase.database.Reference;
     private currentTurn: number;
+    private p1name: string;
+    private p2name: string;
 
-    @action reset() {
+    @action reset(p1name: string, p2name: string) {
         this.spots = [];
         this.gamePieces = [];
         this.stagePiece = null;
@@ -48,6 +50,8 @@ export class GameState {
         this.lastPiece = null;
         this.gameId = undefined;
         this.currentTurn = 0;
+        this.p1name = p1name;
+        this.p2name = p2name;
         for (let _ = 0; _ < 4; _++) {
             this.spots.push([null, null, null, null]);            
         };
@@ -107,6 +111,12 @@ export class GameState {
         }   else    {
             return "end"
         }
+    }
+    @computed get currentPlayerName() : string {
+        return this.currentPlayer === 0 ? this.p1name : this.p2name;
+    }
+    @computed get otherPlayerName() : string {
+        return this.currentPlayer === 1 ? this.p1name : this.p2name;
     }
     boardIsFull() : boolean {
         for (let i = 0; i < this.spots.length; i++) {

@@ -15,38 +15,30 @@ import { GameState } from '~/state';
 export default class GamePage extends Route {
     localGameState = new GameState();
     componentDidMount() {
-        this.localGameState.reset();
+        this.localGameState.reset("Player 1", "Player 2");
     }
     render() {
         const cState = this.localGameState.currentStage;
-        let bMsg: string;
-        if (cState === "select-piece") {
-            bMsg = `Select a piece for player ${1-this.localGameState.currentPlayer + 1}`
-        }   else if(cState === "place-piece") {
-            bMsg = `Place the piece`
-        }   else {
-            bMsg = "Game Over."
-        }
+        const cpName = this.localGameState.currentPlayerName;
+        const opName = this.localGameState.otherPlayerName;
         return <div id="game-page">
             <Cover
-                currentPlayer={this.localGameState.currentPlayer}
+                currentPlayer={cpName}
                 won={this.localGameState.winState.won}
-                onReset={() => this.localGameState.reset()}
+                onReset={() => this.localGameState.reset("Player 1", "Player 2")}
             />
             <Navbar
-                currentPlayer={this.localGameState.currentPlayer}
-                onResetGame={() => this.localGameState.reset()}
+                onResetGame={() => this.localGameState.reset("Player 1", "Player 2")}
                 onUndo={() => this.localGameState.undo()}
             />
-            <BottomBar gameStateStage={cState} currentPlayer={this.localGameState.currentPlayer}/>
+            <BottomBar gameStateStage={cState} currentPlayer={cpName} otherPlayer={opName}/>
             <Board 
                 winState={this.localGameState.winState}
-                currentPlayer={this.localGameState.currentPlayer}
                 spots={this.localGameState.spots}
                 hightlightedPiece={this.localGameState.lastPiece}
                 highlighted={cState === "place-piece"}
                 onPlace={(x,y) => this.localGameState.placeGamePiece(x,y)}
-                onResetGame={() => this.localGameState.reset()}
+                onResetGame={() => this.localGameState.reset("Player 1", "Player 2")}
             />
             <OpenPieces 
                 gamePieces={this.localGameState.gamePieces}

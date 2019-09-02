@@ -1,10 +1,9 @@
 import * as React from "react";
-import { PlayerId } from '~/state';
 
 
 export interface Props {
     won: boolean;
-    currentPlayer: PlayerId;
+    currentPlayer: string;
     onReset: () => void;
 }
 export default function Cover(p: Props) {
@@ -13,7 +12,7 @@ export default function Cover(p: Props) {
         top: p.won ? '0' : '-200vh',
     }}>
         <div>
-            <span>Player #{p.currentPlayer + 1} has won!</span>
+            <span>{p.currentPlayer} has won!</span>
             <button onClick={()=>{
                 p.onReset();
             }}>Play Again?</button>

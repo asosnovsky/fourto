@@ -18,10 +18,12 @@ import "./Game.scss";
 export default class SinglePlayerGamePage extends Route {
     localGameState = new GameState();
     componentDidMount() {
-        this.localGameState.reset();
+        this.localGameState.reset("Player 1", "PC");
     }
     render() {
         const cState = this.localGameState.currentStage;
+        const cpName = this.localGameState.currentPlayerName;
+        const opName = this.localGameState.otherPlayerName;
         if ( this.localGameState.currentPlayer === 1 ) {
             playAgainst(this.localGameState, dumbAI);
         }
@@ -32,24 +34,22 @@ export default class SinglePlayerGamePage extends Route {
         }
         return <div id="game-page">
             <Cover
-                currentPlayer={this.localGameState.currentPlayer}
+                currentPlayer={cpName}
                 won={this.localGameState.winState.won}
-                onReset={() => runIf(() => this.localGameState.reset()) }
+                onReset={() => runIf(() => this.localGameState.reset("Player 1", "PC")) }
             />
             <Navbar
-                currentPlayer={this.localGameState.currentPlayer}
-                onResetGame={() => runIf(() => this.localGameState.reset()) }
+                onResetGame={() => runIf(() => this.localGameState.reset("Player 1", "PC")) }
                 onUndo={() => runIf(() => this.localGameState.undo()) }
             />
-            <BottomBar gameStateStage={cState} currentPlayer={this.localGameState.currentPlayer}/>
+            <BottomBar gameStateStage={cState} currentPlayer={cpName} otherPlayer={opName}/>
             <Board 
                 winState={this.localGameState.winState}
-                currentPlayer={this.localGameState.currentPlayer}
                 spots={this.localGameState.spots}
                 hightlightedPiece={this.localGameState.lastPiece}
                 highlighted={cState === "place-piece"}
                 onPlace={(x,y) => runIf(() => this.localGameState.placeGamePiece(x,y)) }
-                onResetGame={() => runIf(() => this.localGameState.reset()) }
+                onResetGame={() => runIf(() => this.localGameState.reset("Player 1", "PC")) }
             />
             <OpenPieces 
                 gamePieces={this.localGameState.gamePieces}

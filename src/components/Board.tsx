@@ -1,13 +1,11 @@
 import * as React from "react";
 import { GamePiece } from "~/components/GamePiece";
-import { PlayerId, GameWinState, BoardGamePieces } from "~/state";
+import { GameWinState, BoardGamePieces } from "~/state";
 
 import "./Board.scss";
-import { number } from 'prop-types';
 
 export interface Props {
     winState: GameWinState,
-    currentPlayer: PlayerId,
     spots: BoardGamePieces,
     hightlightedPiece: number[] | null,
     highlighted: boolean,
