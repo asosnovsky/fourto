@@ -8,10 +8,16 @@ class BannerState {
     @observable show = false;
     @observable msg: string = "n/a";
 
+    private lastNotif: number;
+
     @action notify(msg: string, timeout: number = 1000) {
+        if (this.lastNotif !== undefined) {
+            window.clearTimeout(this.lastNotif);
+            this.lastNotif = undefined;
+        }
         this.msg = msg;
         this.show = true;
-        window.setTimeout(() => {
+        this.lastNotif = window.setTimeout(() => {
             this.show = false;
         }, timeout);
     }
@@ -22,7 +28,7 @@ export default observer(function TextBanner () {
             // height: bannerState.show ? '25vh' : '0vh',
             // width: bannerState.show ? '100vw' : '0vw',
             opacity: bannerState.show ? 1 : 0,
-            top: bannerState.show ? 0 : -1000,
+            top: bannerState.show ? '25vh' : -1000,
         }}>
         <p>{bannerState.msg}</p>
         <div>

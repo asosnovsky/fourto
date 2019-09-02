@@ -9,33 +9,26 @@ export interface Props {
     winState: GameWinState,
     currentPlayer: PlayerId,
     spots: BoardGamePieces,
-    hightlighted: number[] | null,
+    hightlightedPiece: number[] | null,
+    highlighted: boolean,
     onResetGame: () => void,
     onPlace: (x: number, y: number) => void,
 }
 export default  function Board ( props: Props ) {
-    return <div className="board">
-        <div className="cover" style={{
-            display: props.winState.won ? 'initial' : 'none'
-        }}>
-            <div>
-                <span>Player #{props.currentPlayer + 1} has won!</span>
-                <button onClick={()=>{
-                    props.onResetGame();
-                }}>Play Again?</button>
-            </div>
-        </div>
+    let className = "board";
+    if (props.highlighted) { className += " highlight" }
+    return <div className={className}>
         {props.spots.map( (row, rIdx) => row.map( (gp, cIdx) => {
             const key = [rIdx, cIdx].join("");
             if (gp === null) {
                 return <div key={key} id={`bp${rIdx}${cIdx}`} onClick={() => {
                     props.onPlace(rIdx, cIdx);
-                }}>{rIdx},{cIdx}</div>
+                }}/>
             }   else    {
                 return <GamePiece key={key} 
-                    highlight={props.hightlighted === null ? false : (
-                        (props.hightlighted[0] == rIdx) &&
-                        (props.hightlighted[1] == cIdx)
+                    highlight={props.hightlightedPiece === null ? false : (
+                        (props.hightlightedPiece[0] == rIdx) &&
+                        (props.hightlightedPiece[1] == cIdx)
                     ) } 
                     row={rIdx} col={cIdx} {...gp}
                 />

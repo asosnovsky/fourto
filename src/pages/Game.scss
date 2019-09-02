@@ -11,24 +11,28 @@ $board_size_max: 70vh;
     @media (orientation:landscape) {
         grid-template:
         'navbar navbar'
-        'board open'  / $board_size 5vw
+        'bbar bbar' 
+        'board open'  
+        / $board_size 5vw
         ;
-        grid-template-rows: 10% 1fr;
+        grid-template-rows: 10% 1fr 10%;
     }
     @media (orientation:portrait) {
         grid-template:
         'navbar'
+        'bbar'
         'board'
-        'open';
-        grid-template-rows: 10% 1fr 1fr;
+        'open'
+        ;
+        grid-template-rows: 10vh 7vh 1fr 1fr;
         
         .navbar {
             box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.33);
         }
     }
     // grid-template-rows: 15vh;
-    grid-column-gap: 2.5vw;
-    grid-row-gap: 2.5vh;
+    // grid-row-gap: 2.5vh;
+    // grid-column-gap: 2.5vw;
     
     .board {
         grid-area: board;
@@ -36,6 +40,7 @@ $board_size_max: 70vh;
         max-height: $board_size_max;
         width: $board_size;
         height: $board_size;
+        padding: 5vw 15vw;
     }
     
     .open-pieces {
@@ -45,12 +50,12 @@ $board_size_max: 70vh;
     .navbar {
         grid-area: navbar;
         display: grid;
-        grid-template: "p" "b";
+        // grid-template: "p" "b";
         font-size: 3vh;
         width: 100%;
         justify-content: center;
 
-        padding: 1% 0;
+        padding: 3% 0;
 
         .nav-buttons {
             grid-area: b;
@@ -59,19 +64,44 @@ $board_size_max: 70vh;
             font-size: 2.5vh;
         }
     }
+
+    .bottom-bar {
+        grid-area: bbar;
+        justify-items: center;
+        display: grid;
+        grid-template-columns: 30% 1fr;
+        grid-column-gap: 5vw;
+        padding-top: 2vh;
+        width: 100%;
+        box-shadow: 0px 0px 4px 3px #0003 inset;
+        b {
+            justify-self: end;
+        }
+        span {
+            justify-self: start;
+        }
+    }
     
     .cover {
         padding-top: 25vh;
-        background: #ffffff7d;
+        background-color: #2224;
         position: absolute;
         z-index: 2;
         top: 0;
         left: 0;
+        transition: top linear 750ms, opacity linear 750ms;
+        height: 100vh;
+        width: 100vw;
+
         div {
             width: 50vw;
             margin-left: 25vw;
-            background: #fff9;
+            background: #fffe;
             padding: 3vw;
+            text-align: center;
+            button {
+                font-size: 1em;
+            }
         }
     }
 }

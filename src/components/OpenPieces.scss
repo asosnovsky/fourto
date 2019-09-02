@@ -1,12 +1,19 @@
 .open-pieces {
     display: grid;
+    width: 100%;
+    // height: 100%;
+    justify-content: center;
+    transition: background-color 500ms linear;
+    
     @media (orientation:landscape) {
         grid-template-columns: repeat(2, 6vw [col-start]);
         grid-template-rows: repeat(8, 6vw [col-start]);
     }
     @media (orientation:portrait) {
-        grid-template-columns: repeat(4, 11vw [col-start]);
-        grid-template-rows: repeat(4, 11vw [col-start]);
+        grid-template-columns: repeat(4, 13vw [col-start]);
+        grid-template-rows: repeat(4, 13vw [col-start]);
+        padding-top: 5vw;
+        padding-bottom: 5vw;
     }
     align-items: center;
     justify-items: center;
@@ -21,18 +28,22 @@
         text-align: center;
         box-shadow: 0px 0px 50px 2px #0002;
         transition: all 0.5s;
+        background: #FFFD;
     }
     > :hover {
-        background: rgba(151, 255, 142, 0.251);
+        background: rgba(151, 255, 142);
         cursor: pointer;
     }
     > .highlight {
-        background: rgba(255, 142, 159, 0.5);
+        background: rgba(151, 255, 142);
     }
     > .highlight:hover {
-        background: rgba(151, 255, 142, 0.5);
+        background: rgba(151, 255, 142);
     }
     > .shadded {
         filter: blur(2.5px);
+    }
+    &.highlight {
+        background: #FF02;
     }
 }

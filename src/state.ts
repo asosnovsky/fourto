@@ -54,7 +54,7 @@ export class GameState {
             const [hole, tall, circle, black] = n.toString(2).padStart(4, "0").split("").map(n => n === "1");
             this.gamePieces.push({ hole, tall, circle, black });       
         };
-        bannerState.notify(`Player ${this.currentPlayer + 1} starts the game!`, 1500);
+        bannerState.notify(`Player ${this.currentPlayer + 1} starts the game!`, 3000);
     }
     @action placeGamePiece(x: number, y: number) {
         if (this.stagePiece !== null) {
@@ -98,14 +98,24 @@ export class GameState {
             console.warn("stagePiece !== null")
         }
     }
-    toJson() {
-        return {
-            spots: this.spots,
-            gamePieces: this.gamePieces,
-            stagePiece: this.stagePiece,
-            currentPlayer: this.currentPlayer,
-            winState: this.winState,
+    @computed get currentStage() : "select-piece" | "place-piece" | "end" {
+        if (this.stagePiece === null) {
+            return "select-piece"
+        }   else if(!this.boardIsFull())  {
+            return "place-piece"
+        }   else    {
+            return "end"
         }
+    }
+    boardIsFull() : boolean {
+        for (let i = 0; i < this.spots.length; i++) {
+            for (let j = 0; j < this.spots[i].length; j++) {
+                if (this.spots[i][j] === null) {
+                    return false
+                }
+            }
+        }
+        return true
     }
     private async log(action: string) {
         if( !this.gameId ) {
@@ -121,7 +131,6 @@ export class GameState {
         }   else {
             this.currentPlayer = 0;
         }
-        bannerState.notify(`Player ${this.currentPlayer + 1} turn!`, 2000);
     }
     private checkUpdateWin() {
         this.winState = this.checkWin();

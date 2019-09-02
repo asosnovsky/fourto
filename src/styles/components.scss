@@ -1,20 +1,4 @@
 
-@font-face {
-    font-family: 'Roboto';
-    src: url('fonts/Roboto-Light.woff') format('woff'),
-         url('fonts/Roboto-Light.woff2') format('woff2');
-    font-weight: 300;
-    font-style: normal;
-}
-
-* {
-    font-family: Roboto;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-}
 button {
     background: rgb(255, 255, 255);
     border: none;

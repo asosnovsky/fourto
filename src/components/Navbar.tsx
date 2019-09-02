@@ -11,14 +11,13 @@ export interface Props {
 }
 export default function Navbar (props: Props) {
     return <div className="navbar">
-        <div style={{"gridArea": "p"}}>
+        {/* <div style={{"gridArea": "p"}}>
             <span>Current Player: </span><span style={{"fontWeight": "bold"}}>Player {props.currentPlayer + 1}</span> 
-        </div>
+        </div> */}
         <div className="nav-buttons">
             <button className="blue" onClick={() => props.onUndo()}>Undo Last Move</button>       
             <button className="red" onClick={() => {
                 props.onResetGame();
-                bannerState.notify(`Game Restarted! Player #${props.currentPlayer+1} Turn!`, 1000)
             }}>Restart Game</button>  
         </div>     
     </div>

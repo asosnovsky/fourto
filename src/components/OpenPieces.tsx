@@ -7,10 +7,13 @@ import "./OpenPieces.scss";
 export interface Props {
     gamePieces: GamePieceList;
     focusPiece: number | null;
+    highlighted: boolean;
     onTake: (i: number) => void;
 }
 export default function OpenPieces(props: Props) {
-    return <div className="open-pieces">
+    let className = "open-pieces";
+    if (props.highlighted) { className += " highlight" }
+    return <div className={className}>
         {props.gamePieces.map( (gp, i) => {
             const rIdx = Math.floor(i / 2);
             const cIdx= i % 2;

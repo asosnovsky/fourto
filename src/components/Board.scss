@@ -8,6 +8,7 @@
     align-items: center;
     justify-items: center;
     grid-gap: 1%;
+    transition: background-color 500ms linear;
 
     > * {
         height: 100%;
@@ -16,21 +17,13 @@
         justify-items: center;
         vertical-align: middle;
         text-align: center;
-        // border: 1px solid;
-        // border-right: none;
-        // border-bottom: none;
         box-shadow: 0px 0px 15px 0px #0003;
     }
 
     @for $i from 0 to 4 {
-        // > #bp#{$i}3 {
-        //     border-right: 1px solid;
-        // }
-        // > #bp3#{$i} {
-        //     border-bottom: 1px solid;
-        // }
         @for $j from 0 to 4 {
             > #bp#{$i}#{$j} {
+                background: #FFFD;
                 grid-area: unquote("bp" + inspect($i) + inspect($j));
             }
         }
@@ -40,6 +33,9 @@
         cursor: pointer;
     }
     .game-piece.highlight {
-        background: rgba(77, 255, 1, 0.198);
+        background: rgba(151, 255, 142) !important;
+    }
+    &.highlight {
+        background: #FF02 !important;
     }
 }
