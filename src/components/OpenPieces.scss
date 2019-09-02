@@ -3,7 +3,7 @@
     width: 100%;
     // height: 100%;
     justify-content: center;
-    transition: background-color 500ms linear;
+    // transition: background-color 500ms linear;
     
     @media (orientation:landscape) {
         grid-template-columns: repeat(2, 6vw [col-start]);
