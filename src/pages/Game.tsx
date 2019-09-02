@@ -27,7 +27,7 @@ export default class GamePage extends Route {
         }
         return <div id="game-page">
             <div className="cover" style={{
-                opacity: this.localGameState.winState.won ? '1' : '0',
+                opacity: this.localGameState.winState.won ? 1 : 0,
                 top: this.localGameState.winState.won ? '0' : '-200vh',
             }}>
                 <div>
