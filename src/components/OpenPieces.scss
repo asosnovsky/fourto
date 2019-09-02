@@ -6,8 +6,8 @@
     // transition: background-color 500ms linear;
     
     @media (orientation:landscape) {
-        grid-template-columns: repeat(2, 6vw [col-start]);
-        grid-template-rows: repeat(8, 6vw [col-start]);
+        grid-template-columns: repeat(4, 8vw [col-start]);
+        grid-template-rows: repeat(4, 8vw [col-start]);
     }
     @media (orientation:portrait) {
         grid-template-columns: repeat(4, 13vw [col-start]);

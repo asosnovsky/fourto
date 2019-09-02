@@ -37,6 +37,16 @@ export default class GamePage extends Route {
                     }}>Play Again?</button>
                 </div>
             </div>
+            <Navbar
+                currentPlayer={this.localGameState.currentPlayer}
+                onResetGame={() => this.localGameState.reset()}
+                onUndo={() => this.localGameState.undo()}
+            />
+            <div className="bottom-bar">
+                <div className="text">
+                    <b>Player #{this.localGameState.currentPlayer + 1}: </b><span>{bMsg}</span>
+                </div>
+            </div>
             <Board 
                 winState={this.localGameState.winState}
                 currentPlayer={this.localGameState.currentPlayer}
@@ -52,14 +62,6 @@ export default class GamePage extends Route {
                 highlighted={cState === "select-piece"}
                 onTake={i => this.localGameState.givePiece(i)}
             />
-            <Navbar
-                currentPlayer={this.localGameState.currentPlayer}
-                onResetGame={() => this.localGameState.reset()}
-                onUndo={() => this.localGameState.undo()}
-            />
-            <div className="bottom-bar">
-                <b>Player #{this.localGameState.currentPlayer + 1}: </b><span>{bMsg}</span>
-            </div>
         </div>
     }
 

@@ -1,6 +1,3 @@
-$board_size: 70vw;
-$board_size_max: 70vh;
-
 #game-page {
     display: grid;
     justify-items: center;
@@ -8,39 +5,8 @@ $board_size_max: 70vh;
     height: 100vh;
     width: 100vw;
 
-    @media (orientation:landscape) {
-        grid-template:
-        'navbar navbar'
-        'bbar bbar' 
-        'board open'  
-        / $board_size 5vw
-        ;
-        grid-template-rows: 10% 1fr 10%;
-    }
-    @media (orientation:portrait) {
-        grid-template:
-        'navbar'
-        'bbar'
-        'board'
-        'open'
-        ;
-        grid-template-rows: 10vh 7vh 1fr 1fr;
-        
-        .navbar {
-            box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.33);
-        }
-    }
-    // grid-template-rows: 15vh;
-    // grid-row-gap: 2.5vh;
-    // grid-column-gap: 2.5vw;
-    
     .board {
         grid-area: board;
-        max-width: $board_size_max;
-        max-height: $board_size_max;
-        width: $board_size;
-        height: $board_size;
-        padding: 5vw 15vw;
     }
     
     .open-pieces {
@@ -49,36 +15,36 @@ $board_size_max: 70vh;
     
     .navbar {
         grid-area: navbar;
-        display: grid;
-        // grid-template: "p" "b";
-        font-size: 3vh;
         width: 100%;
+        display: flex;
+        align-items: center;
         justify-content: center;
-
-        padding: 3% 0;
 
         .nav-buttons {
             grid-area: b;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr [col-start]);
-            font-size: 2.5vh;
+            display: flex;
+            font-size: 1em;
+            width: 100%;
+            justify-content: center;
         }
     }
 
     .bottom-bar {
         grid-area: bbar;
-        justify-items: center;
-        display: grid;
-        grid-template-columns: 30% 1fr;
-        grid-column-gap: 5vw;
-        padding-top: 2vh;
         width: 100%;
         box-shadow: 0px 0px 4px 3px #0003 inset;
-        b {
-            justify-self: end;
-        }
-        span {
-            justify-self: start;
+        display: grid;
+        .text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            b {
+                justify-self: end;
+                margin-right: 1%;
+            }
+            span {
+                justify-self: start;
+            }
         }
     }
     
@@ -102,6 +68,35 @@ $board_size_max: 70vh;
             button {
                 font-size: 1em;
             }
+        }
+    }
+
+    @media (orientation:landscape) {
+        grid-template:
+            'navbar navbar'
+            'bbar bbar' 
+            'board open'  
+        ;
+        grid-template-rows: 10vh 8vh 1fr;
+        .board, .open-pieces {
+            padding-top: 1%;
+        }
+    }
+    @media (orientation:portrait) {
+        grid-template:
+            'navbar'
+            'bbar'
+            'board'
+            'open'
+        ;
+        grid-template-rows: 10vh 7vh 1fr 1fr;
+        
+        .navbar {
+            padding: 3% 0;
+            box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.33);
+        }
+        .board {
+            padding: 5vw 15vw;
         }
     }
 }
