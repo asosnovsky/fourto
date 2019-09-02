@@ -1,0 +1,30 @@
+
+#main-page {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+    font-size: 4vh;
+    grid-row-gap: 3vh;
+    h4 {
+        text-align: center;
+        padding: 5% 10%;
+        margin: 0;
+        span {
+            font-family: Brush Script MT,cursive; 
+            color: #F00;
+            &#k0 {
+                color: #000;
+            }
+            &#k1 {
+                color: #0Fa;
+            }
+            &#k2 {
+                color: #00F;
+            }
+            &#k3 {
+                color: #03dF;
+            }
+        }
+    }
+}

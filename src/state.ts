@@ -18,6 +18,7 @@ export type GamePieceInSpot = GamePieceOptions | null;
 export type GamePieceList = GamePieceInSpot[];
 export type BoardGamePieces = GamePieceInSpot[][];
 export type PlayerId = 0 | 1;
+export type GameStateStage = "select-piece" | "place-piece" | "end";
 
 const stringifyGamePiece = (gp: GamePieceInSpot) => {
     if (gp === null ) {
@@ -98,7 +99,7 @@ export class GameState {
             console.warn("stagePiece !== null")
         }
     }
-    @computed get currentStage() : "select-piece" | "place-piece" | "end" {
+    @computed get currentStage() : GameStateStage {
         if (this.stagePiece === null) {
             return "select-piece"
         }   else if(!this.boardIsFull())  {

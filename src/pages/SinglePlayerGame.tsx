@@ -8,35 +8,38 @@ import Navbar from "~/components/Navbar";
 import Cover from '~/components/Cover';
 import BottomBar from '~/components/BottomBar';
 
-import "./Game.scss";
 import { GameState } from '~/state';
+import { dumbAI } from '~/ai/basic';
+import { playAgainst } from '~/ai/def';
+
+import "./Game.scss";
 
 @observer
-export default class GamePage extends Route {
+export default class SinglePlayerGamePage extends Route {
     localGameState = new GameState();
     componentDidMount() {
         this.localGameState.reset();
     }
     render() {
         const cState = this.localGameState.currentStage;
-        let bMsg: string;
-        if (cState === "select-piece") {
-            bMsg = `Select a piece for player ${1-this.localGameState.currentPlayer + 1}`
-        }   else if(cState === "place-piece") {
-            bMsg = `Place the piece`
-        }   else {
-            bMsg = "Game Over."
+        if ( this.localGameState.currentPlayer === 1 ) {
+            playAgainst(this.localGameState, dumbAI);
+        }
+        const runIf = (cb: () => void) => {
+            if ( this.localGameState.currentPlayer === 0) {
+                cb();
+            }
         }
         return <div id="game-page">
             <Cover
                 currentPlayer={this.localGameState.currentPlayer}
                 won={this.localGameState.winState.won}
-                onReset={() => this.localGameState.reset()}
+                onReset={() => runIf(() => this.localGameState.reset()) }
             />
             <Navbar
                 currentPlayer={this.localGameState.currentPlayer}
-                onResetGame={() => this.localGameState.reset()}
-                onUndo={() => this.localGameState.undo()}
+                onResetGame={() => runIf(() => this.localGameState.reset()) }
+                onUndo={() => runIf(() => this.localGameState.undo()) }
             />
             <BottomBar gameStateStage={cState} currentPlayer={this.localGameState.currentPlayer}/>
             <Board 
@@ -45,14 +48,14 @@ export default class GamePage extends Route {
                 spots={this.localGameState.spots}
                 hightlightedPiece={this.localGameState.lastPiece}
                 highlighted={cState === "place-piece"}
-                onPlace={(x,y) => this.localGameState.placeGamePiece(x,y)}
-                onResetGame={() => this.localGameState.reset()}
+                onPlace={(x,y) => runIf(() => this.localGameState.placeGamePiece(x,y)) }
+                onResetGame={() => runIf(() => this.localGameState.reset()) }
             />
             <OpenPieces 
                 gamePieces={this.localGameState.gamePieces}
                 focusPiece={this.localGameState.stagePiece}
                 highlighted={cState === "select-piece"}
-                onTake={i => this.localGameState.givePiece(i)}
+                onTake={i => runIf(() => this.localGameState.givePiece(i)) }
             />
         </div>
     }
