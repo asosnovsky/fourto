@@ -13,7 +13,7 @@ export default class MainPage extends Route {
             </h4>
             <button className="blue" onClick={() => history.push("/singleplayer")}>Single Player</button>
             <button className="green" onClick={() => history.push("/local-multiplayer")}>Local Multiplayer</button>
-            <button className="yellow" onClick={() => bannerState.notify("WIP")}>Online Multiplayer</button>
+            <button className="yellow" onClick={() => history.push("/online")}>Online Multiplayer</button>
         </div>
     }
 }

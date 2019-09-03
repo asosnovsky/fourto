@@ -12,7 +12,7 @@ import "./Game.scss";
 import { GameState } from '~/state';
 
 @observer
-export default class GamePage extends Route {
+export default class LocalMultiplayerPage extends Route {
     localGameState = new GameState();
     componentDidMount() {
         this.localGameState.reset("Player 1", "Player 2");

@@ -2,7 +2,7 @@ import { observable, action, computed } from "mobx";
 
 import { GamePieceOptions } from "~/components/GamePiece";
 import { bannerState } from '~/components/TextBanner';
-import { database, getUID } from "~/database";
+import { logdb, getUID } from "~/database";
 
 export type GameWinState = {
     won: false;
@@ -38,9 +38,48 @@ export class GameState {
 
     private gameId: firebase.database.Reference;
     private currentTurn: number;
-    private p1name: string;
-    private p2name: string;
+    @observable private p1name: string;
+    @observable private p2name: string;
 
+    @action async resetFromSnap(snap: firebase.firestore.DocumentSnapshot) {
+        const data = snap.data();
+        let alreadyPlayed: string[] = [];
+        this.spots = (data['state'] as string[]).map( row =>
+            row.split("|").map( cell => {
+                if (cell === "----") {
+                    return null
+                }   else    {
+                    alreadyPlayed.push(cell);
+                    const [hole, tall, circle, black] = cell.split("").map(n => n === "1");
+                    return { hole, tall, circle, black };
+                }
+            } )
+        );
+        this.gamePieces = [];
+        for (let n = 0; n < 16; n++) {
+            const bin = n.toString(2).padStart(4, "0");
+            if (alreadyPlayed.indexOf(bin) === -1) {
+                const [hole, tall, circle, black] = bin.split("").map(n => n === "1");
+                this.gamePieces.push({ hole, tall, circle, black });       
+            }   else    {
+                alreadyPlayed.push(null);
+            }
+        };
+        this.currentTurn = alreadyPlayed.length;
+        this.winState = data['winState'];
+        this.lastPiece = null;
+
+        const uid = await getUID();
+        this.currentPlayer = data['current'] === uid ? 0 : 1;
+        this.gameId = logdb.ref(`/logs/${uid}/${snap.id}${data['started']}`);
+
+        const ouid = (data['users'] as string[]).map((u,i) => ({u, i})).filter( ({u, i}) => u !== uid)[0];
+        this.p1name = data['aliases'][ouid.i];
+        this.p2name = data['aliases'][1-ouid.i];
+        if ( alreadyPlayed.length === 0 ) {
+            bannerState.notify(`Player ${this.currentPlayerName} starts the game!`, 3000);
+        }
+    }
     @action reset(p1name: string, p2name: string) {
         this.spots = [];
         this.gamePieces = [];
@@ -59,7 +98,7 @@ export class GameState {
             const [hole, tall, circle, black] = n.toString(2).padStart(4, "0").split("").map(n => n === "1");
             this.gamePieces.push({ hole, tall, circle, black });       
         };
-        bannerState.notify(`Player ${this.currentPlayer + 1} starts the game!`, 3000);
+        bannerState.notify(`Player ${this.currentPlayerName} starts the game!`, 3000);
     }
     @action placeGamePiece(x: number, y: number) {
         if (this.stagePiece !== null) {
@@ -113,12 +152,29 @@ export class GameState {
         }
     }
     @computed get currentPlayerName() : string {
+        console.log(this.p1name, this.p2name, this.currentPlayer);
         return this.currentPlayer === 0 ? this.p1name : this.p2name;
     }
     @computed get otherPlayerName() : string {
         return this.currentPlayer === 1 ? this.p1name : this.p2name;
     }
-    boardIsFull() : boolean {
+    toStateStrings(): string[] {
+        return this.spots.map(
+            row => row.map(
+                cell => {
+                    if (cell === null) {
+                        return "----"
+                    }   else    {
+                        const { hole, tall, circle, black } = cell;
+                        return [
+                            hole, tall, circle, black
+                        ].map(Number).join("")
+                    }
+                }
+            ).join("|")
+        )
+    }
+    private boardIsFull() : boolean {
         for (let i = 0; i < this.spots.length; i++) {
             for (let j = 0; j < this.spots[i].length; j++) {
                 if (this.spots[i][j] === null) {
@@ -131,7 +187,7 @@ export class GameState {
     private async log(action: string) {
         if( !this.gameId ) {
             const uid = await getUID();
-            this.gameId = await database.ref(`/logs/${uid}`).push([])
+            this.gameId = await logdb.ref(`/logs/${uid}`).push([])
         }
         await this.gameId.child(String(this.currentTurn)).set(action);
         this.currentTurn += 1;
