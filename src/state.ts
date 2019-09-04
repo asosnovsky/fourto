@@ -71,7 +71,7 @@ export class GameState {
 
         const uid = await getUID();
         this.currentPlayer = data['current'] === uid ? 0 : 1;
-        this.gameId = logdb.ref(`/logs/${uid}/${snap.id}${data['started']}`);
+        this.gameId = logdb.child(`${uid}/${snap.id}${data['started']}`);
 
         const ouid = (data['users'] as string[]).map((u,i) => ({u, i})).filter( ({u, i}) => u !== uid)[0];
         this.p1name = data['aliases'][ouid.i];
@@ -152,7 +152,6 @@ export class GameState {
         }
     }
     @computed get currentPlayerName() : string {
-        console.log(this.p1name, this.p2name, this.currentPlayer);
         return this.currentPlayer === 0 ? this.p1name : this.p2name;
     }
     @computed get otherPlayerName() : string {
@@ -187,7 +186,7 @@ export class GameState {
     private async log(action: string) {
         if( !this.gameId ) {
             const uid = await getUID();
-            this.gameId = await logdb.ref(`/logs/${uid}`).push([])
+            this.gameId = await logdb.child(`/${uid}`).push([])
         }
         await this.gameId.child(String(this.currentTurn)).set(action);
         this.currentTurn += 1;

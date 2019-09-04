@@ -5,7 +5,7 @@ import moment from "moment";
 
 
 import { history } from "~/router";
-import { getUID, gamedb } from '~/database';
+import { getUID, gamedb, getSecretPhrase } from '~/database';
 import Loader from '~/components/Loader';
 
 import "./OnlineMultiplayerSetup.scss";
@@ -31,8 +31,9 @@ export default class OnlineMultiplayerSetupPage extends Route {
 
     async componentDidMount() {
         const uid = await getUID();
+        const sphrase = await getSecretPhrase();
         this.setState({
-            uid
+            uid: sphrase,
         });
         this.removeListener = gamedb.where('users', 'array-contains', uid).where('winState.won', '==', false).onSnapshot( snap => {
             this.setState({
