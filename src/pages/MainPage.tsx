@@ -23,6 +23,7 @@ export default class MainPage extends Route {
                 <h4>What's New?</h4>
                 <ul>
                     {[
+                        "1.1.6 - Improved singleplayer AI",
                         "1.1.5 - Form validations for online play",
                         "1.1.4 - Single player AI is a bit smarter",
                         "1.1.4 - Online Multiplayer",

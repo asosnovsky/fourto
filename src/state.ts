@@ -137,7 +137,10 @@ export class GameState {
                 this.stagePiece = i;
                 this.switchPlayers();
             }   else    {
-                bannerState.notify("Err: G[stagePiece] !== null", 5000)
+                bannerState.confirm(
+                    "Err: G[stagePiece] !== null. Restart Game?", 
+                    () => this.reset(this.p1name, this.p2name)
+                )
             }
         }else{
             console.warn("stagePiece !== null")

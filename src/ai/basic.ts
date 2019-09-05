@@ -44,6 +44,7 @@ export const easyAI: AIPlayer = {
         const out = u.map( (p, i) => {
             if (p !== null ) {
                 const qtab = computeQTab(b, p);
+                // console.log("checking", {...p}, qtab);
                 return {
                     i,
                     val: qtab.reduce((last: Out | null, nrow, x) => {
@@ -52,11 +53,12 @@ export const easyAI: AIPlayer = {
                             return lc; 
                         } , null)
                         if( (last === null) || (last.cell < best.cell) ) return best;
+                        if ( (last.cell === best.cell) && (Math.random() < 0.5) ) return best; 
                         return last;
                     }, null)
                 }
             }   else    {
-                return {i, val: {cell: 1000}};
+                return {i, val: {cell: 100000}};
             }
         }).reduce( (last, incm) => {
             if( last.val.cell < incm.val.cell ) {
@@ -79,9 +81,15 @@ function zeros() {
     ]
 }
 
-function computeQTab(b: BoardGamePieces, p: GamePieceOptions, nullValue = -1000) {
+function computeQTab(b: BoardGamePieces, p: GamePieceOptions, nullValue = -10000) {
     const weights = zeros();
     const keys: Array<keyof GamePieceOptions> = ["black", "circle", "hole", "tall"];
+
+    function updateWeight(x: number, y: number, numOfMatches: number) {
+        if(numOfMatches !== 0) {
+            weights[x][y] += Math.pow(10, numOfMatches)
+        }
+    }
     const diagLMatched: Record<keyof GamePieceOptions, number> = {
         "black": 0, "circle": 0, "hole": 0, "tall": 0,
     };
@@ -109,18 +117,20 @@ function computeQTab(b: BoardGamePieces, p: GamePieceOptions, nullValue = -1000)
         for (let y = 0; y < 4; y++) {
             keys.forEach( key => {
                 if( b[x][y] === null ) {
-                    if (rowMatched[key] === 3) {
-                        weights[x][y] += (rowMatched[key] * 10)
-                    }   else    {
-                        weights[x][y] += rowMatched[key]
-                    }
+                    updateWeight(x, y, rowMatched[key])
+                    // if (rowMatched[key] === 3) {
+                    //     weights[x][y] += (rowMatched[key] * 10)
+                    // }   else    {
+                    //     weights[x][y] += rowMatched[key]
+                    // }
                 }
                 if( b[y][x] === null ) {
-                    if ( colMatched[key] === 3 ) {
-                        weights[y][x] += (colMatched[key] * 10)
-                    }   else    {
-                        weights[y][x] += colMatched[key]
-                    }
+                    updateWeight(y, x, colMatched[key])
+                    // if ( colMatched[key] === 3 ) {
+                    //     weights[y][x] += (colMatched[key] * 10)
+                    // }   else    {
+                    //     weights[y][x] += colMatched[key]
+                    // }
                 }
             });
         };
@@ -140,18 +150,20 @@ function computeQTab(b: BoardGamePieces, p: GamePieceOptions, nullValue = -1000)
         const y2 = x;
         keys.forEach( key => {
             if( b[x][y1] === null ) {
-                if (diagLMatched[key] === 3) {
-                    weights[x][y1] += (diagLMatched[key] * 10)
-                }   else    {
-                    weights[x][y1] += diagLMatched[key]
-                }
+                updateWeight(x, y1, diagLMatched[key])
+                // if (diagLMatched[key] === 3) {
+                //     weights[x][y1] += (diagLMatched[key] * 10)
+                // }   else    {
+                //     weights[x][y1] += diagLMatched[key]
+                // }
             }
             if( b[y2][x] === null ) {
-                if ( diagRMatched[key] === 3 ) {
-                    weights[y2][x] += (diagRMatched[key] * 10)
-                }   else    {
-                    weights[y2][x] += diagRMatched[key]
-                }
+                updateWeight(x, y2, diagLMatched[key])
+                // if ( diagRMatched[key] === 3 ) {
+                //     weights[y2][x] += (diagRMatched[key] * 10)
+                // }   else    {
+                //     weights[y2][x] += diagRMatched[key]
+                // }
             }
         });
     };
