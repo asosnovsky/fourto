@@ -1,9 +1,6 @@
-import * as np from "mathjs";
 import { AIPlayer } from './def';
-import { GamePieceOptions, GamePieceProps } from '~/components/GamePiece';
+import { GamePieceOptions } from '~/components/GamePiece';
 import { BoardGamePieces } from '~/state';
-
-console.log(np)
 
 export const dumbAI : AIPlayer = {
     placePiece(_, b) {
