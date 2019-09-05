@@ -29,6 +29,9 @@
                 color: #03dF;
             }
         }
+        i {
+            font-size: 0.15em;
+        }
     }
     .btns {
         padding: 0 10vw;
@@ -79,6 +82,20 @@
             li {
                 font-size: 1em;
             }
+        }
+    }
+    .legal {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        font-size: 0.5em;
+        @media (orientation:landscape) {
+            height: 1em;
+            width: 5em;
+        }
+        @media (orientation:portrait) {
+            height: 2em;
+            width: 5em;
         }
     }
 }

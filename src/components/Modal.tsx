@@ -15,7 +15,9 @@ class ModalState {
 }
 export const modalState = new ModalState();
 export default observer(function Modal () {
-    return <div className="modal" style={{ 
+    return <div className="modal" onClick={() => {
+        modalState.show = false;
+    }} style={{ 
             opacity: modalState.show ? 1 : 0,
             top: modalState.show ? '0' : -1000,
         }}>
