@@ -5,16 +5,18 @@ import moment from "moment";
 
 
 import { history } from "~/router";
-import { getUID, gamedb, getSecretPhrase } from '~/database';
+import { getUID, gamedb, getSecretPhrase, sphrasedb, getAliases, saveAliases, aliasdb } from '~/database';
 import Loader from '~/components/Loader';
 
 import "./OnlineMultiplayerSetup.scss";
+import { modalState } from '~/components/Modal';
+import { bannerState } from '~/components/TextBanner';
 
 function QRDisplayer(p : { code?: string; }) {
     return <>
-        <div><Loader/></div>
+        <div id="qr-loader"><Loader/></div>
         {p.code && <QRCode value={p.code}/>}
-        <span>{p.code}</span>
+        <div id="qr-code">{p.code}</div>
     </>
 } 
 
@@ -25,77 +27,129 @@ interface GameMetaData {
     turn: number | string;
 }
 export default class OnlineMultiplayerSetupPage extends Route {
-    state: { uid?: string; games: GameMetaData[] } = { games: [] };
+    state: { 
+        uid?: string; 
+        games: GameMetaData[]; 
+        myName: string;
+        opnSPhrase?: string;
+    } = { games: [], myName: "Player 1" };
 
     removeListener: () => void; 
 
     async componentDidMount() {
-        const uid = await getUID();
-        const sphrase = await getSecretPhrase();
         this.setState({
-            uid: sphrase,
-        });
-        this.removeListener = gamedb.where('users', 'array-contains', uid).where('winState.won', '==', false).onSnapshot( snap => {
-            this.setState({
-                games: snap.docs.map( doc => {
-                    const data = doc.data();
-                    const ouid = (data['users'] as string[]).map((u,i) => ({u, i})).filter( ({u, i}) => u !== uid)[0];
-                    let turn: string | number = "game-over";
-                    if( !data['winState'].won ) {
-                        turn = ( data['state'] as string[]).reduce(
-                            (acc, row) => acc + row.split('|').map(cell => cell === '----' ? 0 : 1).reduce( (a, b) => a + b, 0),
-                            0
-                        )
+            myName: getAliases().p1,
+        })
+        await Promise.all([
+            getSecretPhrase().then( sphrase => this.setState({
+                uid: sphrase
+            })),
+            getUID().then( uid => this.removeListener = gamedb.
+                where(`users`, 'array-contains', uid).
+                where('winState.won', '==', false).onSnapshot( 
+                    async snap => {
+                        let games = await Promise.all(snap.docs.map( async doc => {
+                            const data = doc.data();
+                            const ouid: string = data['users'].filter( u => u !== uid )[0];
+
+                            let turn: string | number = "game-over";
+                            if( !data['winState'].won ) {
+                                turn = ( data['state'] as string[]).reduce(
+                                    (acc, row) => acc + row.split('|').map(cell => cell === '----' ? 0 : 1).reduce( (a, b) => a + b, 0),
+                                    0
+                                )
+                            };
+                            return {
+                                uid: doc.id,
+                                opponent: (await aliasdb.child(ouid).once('value')).val() || "Unknown",
+                                turn,
+                                lastplayed: data['updated']
+                            }
+                        }));
+                        this.setState({
+                            games
+                        })
                     }
-                    return {
-                        uid: doc.id,
-                        opponent: data["aliases"][ouid.i],
-                        turn,
-                        lastplayed: data['updated']
-                    }
-                })
-            })
-        } )
+                )
+            )
+        ])
     }
     componentWillUnmount() {
         this.removeListener();
+    }
+    async createGame(opn: string, opnName: string = "Player 2") {
+        const uid = await getUID();
+        const update: any = {
+            users: [
+                uid, opn,
+            ],
+            current: Math.random() > 0.5 ? uid : opn,
+            state: [
+                '----|----|----|----',
+                '----|----|----|----',
+                '----|----|----|----',
+                '----|----|----|----',
+            ],
+            piece: null,
+            winState: { won: false },
+            started: Date.now(),
+            updated: Date.now(),
+        };
+        return await gamedb.add(update)
     }
     public render() {
         let qrCls = "qr";
         if ( this.state.uid ) { qrCls += " --loaded"};
         return <div id="online-multiplayer-setup-page">
+            <div className="name-tab">
+                <span>Your Name: </span>
+                <input type="text" value={this.state.myName} onChange={e => {
+                    this.setState({
+                        myName: e.target.value
+                    });
+                    saveAliases(e.target.value);
+                }}/>
+            </div>
             <div className="btns">
                 <button disabled={this.state.uid === undefined} onClick={async () => {
-                    await gamedb.add({
-                        users: [this.state.uid, "a"],
-                        current: Math.random() > 0.5 ? this.state.uid : "a",
-                        state: [
-                            '----|----|----|----',
-                            '----|----|----|----',
-                            '----|----|----|----',
-                            '----|----|----|----',
-                        ],
-                        aliases: ["Player 1", "Player 2"],
-                        piece: null,
-                        winState: { won: false },
-                        started: Date.now(),
-                        updated: Date.now(),
-                    })
-                }}>Create Game</button>
+                    modalState.ask(() => <>
+                        <div className="modal-content-inner">
+                            <span>Opponent Secret Passphrase: </span>
+                            <input type="text" value={this.state.opnSPhrase} onChange={e => {
+                                this.setState({ opnSPhrase: e.target.value });
+                            }}/>
+                        </div>
+                        <div className="modal-content-btns">
+                            <button onClick={async () => {
+                                const ouid = (await sphrasedb.child("/ptu/" + this.state.opnSPhrase).once('value')).val();
+                                if (!ouid) {
+                                    bannerState.notify("Invalid passphrase!");
+                                }   else    {
+                                    const r = await this.createGame(ouid);
+                                    history.push(`/online/${r.id}`);
+                                    modalState.show = false;
+                                }
+                            }}>Play</button>
+                            <button onClick={() => {
+                                modalState.show = false;
+                            }}>Cancel</button>
+                        </div>
+                    </>);
+                }}>Join by phrase</button>
                 <button>Scan</button>
             </div>
             <div className={qrCls}>
                 <QRDisplayer code={this.state.uid}/>
             </div>
             <table className="pure-table">
-                <thead>
+                {(this.state.games.length > 0) && <thead>
                     <tr>
                         <th>Opponent</th>
                         <th>Turn #</th>
                         <th>Last Played</th>
                         <th></th>
                     </tr>
-                </thead>
+                </thead>}
                 <tbody>
                     {this.state.games.map( ({uid, turn, lastplayed, opponent}) => <tr key={uid}>
                         <td>{opponent}</td>

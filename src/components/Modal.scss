@@ -1,0 +1,36 @@
+.modal {
+    position: absolute;
+    background: #ffffffe0;
+    box-shadow: 3px 4px 5px 1px #ffffff;
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    left: 0;
+    z-index: 5;
+    display: grid;
+    justify-content: center;
+    transition: top 1s;
+    grid-template: "." "c" ".";
+    grid-template-rows: 1fr 1fr 1fr;
+
+    &-content {
+        grid-area: c;
+        background: white;
+        margin: 0 10%;
+        padding: 10%;
+        box-shadow: 10px 10px 30px 10px #f884;
+        display: grid;
+        grid-template: "n" "i" "b";
+        grid-template-rows: 10% 80% 10%;
+
+        &-nav {
+            grid-area: n;
+        }
+        &-inner {
+            grid-area: i;
+        }
+        &-btns {
+            grid-area: b;
+        }
+    }
+}

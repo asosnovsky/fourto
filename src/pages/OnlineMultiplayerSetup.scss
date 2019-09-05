@@ -1,10 +1,12 @@
 #online-multiplayer-setup-page {
     display: grid;
     justify-items: center;
-    grid-template-areas: "." "b" "q" "g" ".";
-    grid-template-rows: 1fr 10vh 25vh 20vh 1fr;
+    grid-template-areas: "." "n" "b" "q" "g" ".";
+    grid-template-rows: 5vh 5vh 10vh 25vh 20vh 1fr;
     height: 100vh;
-    
+    .name-tab {
+        grid-area: n
+    }
     .btns {
         grid-area: b;
         display: flex;
@@ -20,26 +22,30 @@
     }
     .qr { 
         position: relative;
+        display: grid;
         grid-area: q;
-        > div, canvas {
+        width: 100%;
+        justify-items: center;
+
+        > canvas {
             height: 20vh !important;
             width: 20vh !important;
         }
         > canvas {
             opacity: 0;
         }
-        > div {
+        > #qr-loader {
+            position: absolute;
+            left: 0; top: 0;
+            height: 20vh;
+            width: 100%;
             opacity: 1;
         }
         &.--loaded {
-            grid-area: q;
-            > div {
+            > #qr-loader {
                 opacity: 0;
-                filter: blur(20px)
             }
             > canvas {
-                left: 25%; top: 0;
-                position: absolute;
                 opacity: 1;
             }
         }

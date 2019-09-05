@@ -2,7 +2,7 @@ import { observable, action, computed } from "mobx";
 
 import { GamePieceOptions } from "~/components/GamePiece";
 import { bannerState } from '~/components/TextBanner';
-import { logdb, getUID } from "~/database";
+import { logdb, getUID, aliasdb, getAliases } from "~/database";
 
 export type GameWinState = {
     won: false;
@@ -35,14 +35,13 @@ export class GameState {
     @observable currentPlayer: PlayerId = Math.random() < 0.5 ? 0 : 1;
     @observable winState: GameWinState = { won: false };
     @observable lastPiece: number[] | null = null;
+    @observable p1name: string;
+    @observable p2name: string;
 
     private gameId: firebase.database.Reference;
     private currentTurn: number;
-    @observable private p1name: string;
-    @observable private p2name: string;
 
-    @action async resetFromSnap(snap: firebase.firestore.DocumentSnapshot) {
-        const data = snap.data();
+    @action async resetFromSnap(snapId: string, data: firebase.firestore.DocumentData) {
         let alreadyPlayed: string[] = [];
         this.spots = (data['state'] as string[]).map( row =>
             row.split("|").map( cell => {
@@ -71,14 +70,16 @@ export class GameState {
 
         const uid = await getUID();
         this.currentPlayer = data['current'] === uid ? 0 : 1;
-        this.gameId = logdb.child(`${uid}/${snap.id}${data['started']}`);
+        this.gameId = logdb.child(`${uid}/${snapId}${data['started']}`);
+        this.p1name = getAliases().p1
+        const ouid: string = (data["users"] as string[]).filter( u => u !== uid)[0]
+        
+        this.p2name = (await aliasdb.child(ouid).once('value')).val();
 
-        const ouid = (data['users'] as string[]).map((u,i) => ({u, i})).filter( ({u, i}) => u !== uid)[0];
-        this.p1name = data['aliases'][ouid.i];
-        this.p2name = data['aliases'][1-ouid.i];
         if ( alreadyPlayed.length === 0 ) {
-            bannerState.notify(`Player ${this.currentPlayerName} starts the game!`, 3000);
+            bannerState.notify(`${this.currentPlayerName} starts the game!`, 3000);
         }
+        return ouid;
     }
     @action reset(p1name: string, p2name: string) {
         this.spots = [];
@@ -98,7 +99,7 @@ export class GameState {
             const [hole, tall, circle, black] = n.toString(2).padStart(4, "0").split("").map(n => n === "1");
             this.gamePieces.push({ hole, tall, circle, black });       
         };
-        bannerState.notify(`Player ${this.currentPlayerName} starts the game!`, 3000);
+        bannerState.notify(`${this.currentPlayerName} starts the game!`, 3000);
     }
     @action placeGamePiece(x: number, y: number) {
         if (this.stagePiece !== null) {

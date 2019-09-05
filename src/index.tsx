@@ -25,8 +25,10 @@ const requiredVersions: any = {
             console.log(binfo.version > rversion)
             if ( binfo.version > rversion ) {
                 const TextBanner = (await import("~/components/TextBanner")).default;
+                const Modal = (await import("~/components/Modal")).default;
                 const AppRouter = (await import("~/router")).default;
                 App = <>
+                    <Modal/>
                     <TextBanner/>
                     <AppRouter/>
                 </>;
