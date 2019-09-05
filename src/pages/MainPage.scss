@@ -4,11 +4,14 @@
     justify-content: center;
     align-content: center;
     height: 100vh;
-    font-size: 4vh;
     grid-row-gap: 3vh;
-    h4 {
+    font-size: 4vh;
+
+    h1 {
         text-align: center;
-        padding: 5% 10%;
+        @media (orientation:portrait) {
+            padding: 5% 10%;
+        }
         margin: 0;
         span {
             font-family: Brush Script MT,cursive; 
@@ -24,6 +27,57 @@
             }
             &#k3 {
                 color: #03dF;
+            }
+        }
+    }
+    .btns {
+        padding: 0 10vw;
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        @media (orientation:portrait) {
+            font-size: 1em;
+            button {
+                width: 80vw;
+            }
+        }
+        @media (orientation:landscape) {
+            font-size: 1.75em;
+            button {
+                width: 80vh;
+            }
+        }
+    }
+    .update-notes {
+        text-align: center;
+        @media (orientation:portrait) {
+            padding: 10%;
+            h4 {
+                margin: 0;
+                font-size: 0.75em;
+            }
+            ul {
+                text-align: start;
+                margin-top: 5%;
+                padding: 0;
+            }
+            li {
+                font-size: 0.5em;
+            }
+        }
+        @media (orientation:landscape) {
+            padding: 0 10%;
+            h4 {
+                margin: 0;
+                font-size: 1.25em;
+            }
+            ul {
+                text-align: start;
+                padding: 0;
+                margin: 0;
+            }
+            li {
+                font-size: 1em;
             }
         }
     }
