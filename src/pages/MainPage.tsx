@@ -23,6 +23,7 @@ export default class MainPage extends Route {
                 <h4>What's New?</h4>
                 <ul>
                     {[
+                        "Single player AI is a bit smarter",
                         "Online Multiplayer",
                         "Visual bugfixes (no more side-scrolling error)",
                         "Browser version checker (if your browser version is incompatible an error will show up)",

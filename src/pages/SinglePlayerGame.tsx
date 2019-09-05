@@ -9,7 +9,7 @@ import Cover from '~/components/Cover';
 import BottomBar from '~/components/BottomBar';
 
 import { GameState } from '~/state';
-import { dumbAI } from '~/ai/basic';
+import { dumbAI, easyAI } from '~/ai/basic';
 import { playAgainst } from '~/ai/def';
 
 import "./Game.scss";
@@ -25,7 +25,7 @@ export default class SinglePlayerGamePage extends Route {
         const cpName = this.localGameState.currentPlayerName;
         const opName = this.localGameState.otherPlayerName;
         if ( this.localGameState.currentPlayer === 1 ) {
-            playAgainst(this.localGameState, dumbAI);
+            playAgainst(this.localGameState, easyAI);
         }
         const runIf = (cb: () => void) => {
             if ( this.localGameState.currentPlayer === 0) {
