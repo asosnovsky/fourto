@@ -141,7 +141,9 @@ export default class OnlineMultiplayerSetupPage extends Route {
                         </div>
                     </>);
                 }}>Join by phrase</button>
-                <button>Scan</button>
+                <button onClick={() => {
+                    bannerState.notify("WIP - coming soon!", 3000);
+                }}>Scan</button>
             </div>
             <div className={qrCls}>
                 <QRDisplayer code={this.state.uid}/>

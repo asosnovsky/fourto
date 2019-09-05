@@ -11,7 +11,7 @@ export default class MainPage extends Route {
         return <div id="main-page">
             <h1>
                 {"FourTO".split("").map( (l, i) => <span key={i} id={`k${i}`}>{l}</span>)}
-                <i>1.1.0</i>
+                <i>1.1.1</i>
             </h1>
             <div className="btns">
                 <button className="blue" onClick={() => history.push("/singleplayer")}>Single Player</button>
