@@ -121,7 +121,8 @@ export default class OnlineMultiplayerSetupPage extends Route {
                         <div className="modal-content-inner">
                             <h4 style={{textAlign: "center"}}>Opponent Secret Passphrase: </h4>
                             <input style={{
-                                width: "100%"
+                                width: "100%",
+                                marginBottom: "10%"
                             }} type="text" value={this.state.opnSPhrase} onChange={e => {
                                 const value = e.target.value.toLowerCase().split(' ').join('-');
                                 e.target.value = value;

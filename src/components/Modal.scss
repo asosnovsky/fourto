@@ -5,11 +5,7 @@
     height: 100vh;
     padding: 0;
     left: 0;
-    display: grid;
-    justify-content: center;
     transition: top 1s;
-    grid-template: "." "c" ".";
-    grid-template-rows: 1fr 1fr 1fr;
 
     &-background {
         position: absolute;
@@ -21,16 +17,20 @@
     }
 
     &-content {
-        grid-area: c;
+        position: absolute;
+        left: 10vw;
+        width: 70vw;
+        padding: 5vw;
+        top: 25vh;
+        max-height: 50vh;
+        overflow-y: scroll;
+
         background: white;
-        margin: 0 10%;
-        padding: 10%;
         box-shadow: 10px 10px 30px 10px #f884;
         display: grid;
         grid-template: "n" "i" "b";
         grid-template-rows: 10% 80% 10%;
         z-index: 6;
-        width: 50vw;
         max-width: 90vh;
 
         &-nav {

@@ -83,7 +83,8 @@ async function removeSphrases() {
 window.addEventListener("unload", removeSphrases)
 window.addEventListener("beforeunload", removeSphrases)
 auth.onAuthStateChanged( d => {
-    if ( !d.uid ) {
+    if ( !d && uid ) {
         removeSphrases();
+        window.location.reload(true);
     }
 } );
