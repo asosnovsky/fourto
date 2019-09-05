@@ -28,7 +28,7 @@ interface GameMetaData {
 }
 export default class OnlineMultiplayerSetupPage extends Route {
     state: { 
-        uid?: string; 
+        passphrase?: string; 
         games: GameMetaData[]; 
         myName: string;
         opnSPhrase?: string;
@@ -42,7 +42,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
         })
         await Promise.all([
             getSecretPhrase().then( sphrase => this.setState({
-                uid: sphrase
+                passphrase: sphrase
             })),
             getUID().then( uid => this.removeListener = gamedb.
                 where(`users`, 'array-contains', uid).
@@ -99,7 +99,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
     }
     public render() {
         let qrCls = "qr";
-        if ( this.state.uid ) { qrCls += " --loaded"};
+        if ( this.state.passphrase ) { qrCls += " --loaded"};
         return <div id="online-multiplayer-setup-page">
             <div className="name-tab">
                 <span>Your Name: </span>
@@ -116,25 +116,33 @@ export default class OnlineMultiplayerSetupPage extends Route {
                 }} className="btn-home">
                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAQAAAC0NkA6AAAAAmJLR0QA/4ePzL8AAAE5SURBVFjD7dQ9S8NAHMfxb6Uogo+DDnXJVhdxclNERPAdiEtxcnbrW8jq6OokCCKIoxbqw1AKTi7i4mJR6VCQDlr6d0iuBNvo9bxDkft9txD4DLkL/MEFlCgRuCRWeEIQ6qy7ATIUaSFxbUIGbBNjHHUA1SmTNol57rsIQXhgIX4j+dRoBZo9CUFoUgBghzdzZIjdVEC1zzCwyKMZMsP1t4QgVAmAKc76R5apaRGC8MIakCWkbXpgdWpRJANs6BKjHPYFqE6Y0CVmuTUiBOGOOR1ik1djIjrUW18DWcIfAao9BtOIac6tEIJwSa4XsdS5THZ6ZvUzsZ34LdjqPT7UAIxwYB1QHTMeIRWEhhOigVCJkCtuyDtB8lQpJ7+KC6RrHvHIv0bS5hGPeMQjHvHILyAX1pEyfib7AN2GgOq5GZnpAAAAAElFTkSuQmCC"/>
                 </button>
-                <button disabled={this.state.uid === undefined} onClick={async () => {
+                <button disabled={this.state.passphrase === undefined} onClick={async () => {
                     modalState.ask(() => <>
                         <div className="modal-content-inner">
                             <h4 style={{textAlign: "center"}}>Opponent Secret Passphrase: </h4>
                             <input style={{
                                 width: "100%"
                             }} type="text" value={this.state.opnSPhrase} onChange={e => {
-                                this.setState({ opnSPhrase: e.target.value });
+                                const value = e.target.value.toLowerCase().split(' ').join('-');
+                                e.target.value = value;
+                                this.setState({ opnSPhrase: value });
                             }}/>
                         </div>
                         <div className="modal-content-btns">
                             <button onClick={async () => {
-                                const ouid = (await sphrasedb.child("/ptu/" + this.state.opnSPhrase).once('value')).val();
-                                if (!ouid) {
-                                    bannerState.notify("Invalid passphrase!");
-                                }   else    {
-                                    const r = await this.createGame(ouid);
-                                    history.push(`/online/${r.id}`);
-                                    modalState.show = false;
+                                if ( this.state.passphrase === this.state.opnSPhrase) {
+                                    bannerState.warn("This is your passphrase!", 3000)
+                                }   else if ( this.state.passphrase || this.state.passphrase.length === 0 ) {
+                                    bannerState.warn("Please enter your opponent passphrase!", 3000)
+                                } else  {
+                                    const ouid = (await sphrasedb.child("/ptu/" + this.state.opnSPhrase).once('value')).val();
+                                    if (!ouid) {
+                                        bannerState.warn("Invalid passphrase!", 3000);
+                                    }   else    {
+                                        const r = await this.createGame(ouid);
+                                        history.push(`/online/${r.id}`);
+                                        modalState.show = false;
+                                    }
                                 }
                             }}>Connect</button>
                             <button onClick={() => {
@@ -144,11 +152,11 @@ export default class OnlineMultiplayerSetupPage extends Route {
                     </>);
                 }}>Join by phrase</button>
                 <button onClick={() => {
-                    bannerState.notify("WIP - coming soon!", 3000);
+                    bannerState.warn("WIP - coming soon!", 3000);
                 }}>Scan</button>
             </div>
             <div className={qrCls}>
-                <QRDisplayer code={this.state.uid}/>
+                <QRDisplayer code={this.state.passphrase}/>
             </div>
             <table className="pure-table">
                 {(this.state.games.length > 0) && <thead>

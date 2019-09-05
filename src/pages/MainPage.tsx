@@ -23,11 +23,12 @@ export default class MainPage extends Route {
                 <h4>What's New?</h4>
                 <ul>
                     {[
-                        "Single player AI is a bit smarter",
-                        "Online Multiplayer",
-                        "Visual bugfixes (no more side-scrolling error)",
-                        "Browser version checker (if your browser version is incompatible an error will show up)",
-                        "Added legal notes"
+                        "1.1.5 - Form validations for online play",
+                        "1.1.4 - Single player AI is a bit smarter",
+                        "1.1.4 - Online Multiplayer",
+                        "1.1.3 - Visual bugfixes (no more side-scrolling error)",
+                        "1.1.1 - Browser version checker (if your browser version is incompatible an error will show up)",
+                        "1.1.1 - Added legal notes"
                     ].map( (txt, i) => <li key={i}>
                         {txt}
                     </li>)} 

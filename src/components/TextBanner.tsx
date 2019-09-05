@@ -7,6 +7,7 @@ import "./TextBanner.scss";
 class BannerState {
     @observable show = false;
     @observable msg: string = "n/a";
+    @observable cssClass: string = "";
 
     action: () => void;
     private lastNotif: number;
@@ -16,6 +17,20 @@ class BannerState {
             window.clearTimeout(this.lastNotif);
             this.lastNotif = undefined;
         }
+        this.cssClass = "notify";
+        this.msg = msg;
+        this.show = true;
+        this.lastNotif = window.setTimeout(() => {
+            this.show = false;
+        }, timeout);
+    }
+
+    @action warn(msg: string, timeout: number = 1000) {
+        if (this.lastNotif !== undefined) {
+            window.clearTimeout(this.lastNotif);
+            this.lastNotif = undefined;
+        }
+        this.cssClass = "warn";
         this.msg = msg;
         this.show = true;
         this.lastNotif = window.setTimeout(() => {
@@ -35,7 +50,7 @@ class BannerState {
 }
 export const bannerState = new BannerState();
 export default observer(function TextBanner () {
-    return <div className="text-banner" style={{ 
+    return <div className={`text-banner ${bannerState.cssClass}`} style={{ 
             opacity: bannerState.show ? 1 : 0,
             top: bannerState.show ? '25vh' : -1000,
         }}>
