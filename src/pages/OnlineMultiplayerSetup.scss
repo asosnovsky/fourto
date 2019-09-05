@@ -18,8 +18,13 @@
             width: 40%;
             height: 60%;
             max-width: 50vh;
+            @media (orientation:landscape) {
+                padding: 0;
+                font-size: 1.25em;
+            }
             img {
-                padding: 25%;
+                max-height: 90%;
+                max-width: 90%;
             }
         }
     }
