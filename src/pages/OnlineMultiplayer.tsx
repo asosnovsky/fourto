@@ -9,7 +9,7 @@ import Cover from '~/components/Cover';
 import BottomBar from '~/components/BottomBar';
 
 import "./Game.scss";
-import { GameState } from '~/state';
+import { GameState } from '~/state/game';
 import { gamedb, getUID, aliasdb } from '~/database';
 import { history } from '~/router';
 import { bannerState } from '~/components/TextBanner';

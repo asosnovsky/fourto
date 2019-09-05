@@ -1,6 +1,6 @@
 import { AIPlayer } from './def';
 import { GamePieceOptions } from '~/components/GamePiece';
-import { BoardGamePieces } from '~/state';
+import { BoardGamePieces } from '~/state/game';
 
 export const dumbAI : AIPlayer = {
     placePiece(_, b) {

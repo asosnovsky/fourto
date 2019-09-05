@@ -2,7 +2,8 @@ import { observable, action, computed } from "mobx";
 
 import { GamePieceOptions } from "~/components/GamePiece";
 import { bannerState } from '~/components/TextBanner';
-import { logdb, getUID, aliasdb, getAliases } from "~/database";
+import { logdb, getUID, aliasdb } from "~/database";
+import { nameState } from './name';
 
 export type GameWinState = {
     won: false;
@@ -71,7 +72,7 @@ export class GameState {
         const uid = await getUID();
         this.currentPlayer = data['current'] === uid ? 0 : 1;
         this.gameId = logdb.child(`${uid}/${snapId}${data['started']}`);
-        this.p1name = getAliases().p1
+        this.p1name = nameState.p1name
         const ouid: string = (data["users"] as string[]).filter( u => u !== uid)[0]
         
         this.p2name = (await aliasdb.child(ouid).once('value')).val();

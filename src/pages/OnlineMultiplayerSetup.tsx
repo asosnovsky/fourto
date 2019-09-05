@@ -5,12 +5,13 @@ import moment from "moment";
 
 
 import { history } from "~/router";
-import { getUID, gamedb, getSecretPhrase, sphrasedb, getAliases, saveAliases, aliasdb } from '~/database';
+import { getUID, gamedb, getSecretPhrase, sphrasedb, aliasdb } from '~/database';
 import Loader from '~/components/Loader';
 
 import "./OnlineMultiplayerSetup.scss";
 import { modalState } from '~/components/Modal';
 import { bannerState } from '~/components/TextBanner';
+import { nameState } from '~/state/name';
 
 function QRDisplayer(p : { code?: string; }) {
     return <>
@@ -30,16 +31,12 @@ export default class OnlineMultiplayerSetupPage extends Route {
     state: { 
         passphrase?: string; 
         games: GameMetaData[]; 
-        myName: string;
         opnSPhrase?: string;
-    } = { games: [], myName: "Player 1" };
+    } = { games: [] };
 
     removeListener: () => void; 
 
     async componentDidMount() {
-        this.setState({
-            myName: getAliases().p1,
-        })
         await Promise.all([
             getSecretPhrase().then( sphrase => this.setState({
                 passphrase: sphrase
@@ -50,7 +47,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
                     async snap => {
                         let games = await Promise.all(snap.docs.map( async doc => {
                             const data = doc.data();
-                            const ouid: string = data['users'].filter( u => u !== uid )[0];
+                            const ouid: string = (data['users'] as string[]).filter( u => u !== uid )[0];
 
                             let turn: string | number = "game-over";
                             if( !data['winState'].won ) {
@@ -103,11 +100,9 @@ export default class OnlineMultiplayerSetupPage extends Route {
         return <div id="online-multiplayer-setup-page">
             <div className="name-tab">
                 <span>Your Name: </span>
-                <input type="text" value={this.state.myName} onChange={e => {
-                    this.setState({
-                        myName: e.target.value
-                    });
-                    saveAliases(e.target.value);
+                <input type="text" value={nameState.p1name} onChange={e => {
+                    nameState.p1name = e.target.value;
+                    nameState.syncNames();
                 }}/>
             </div>
             <div className="btns">

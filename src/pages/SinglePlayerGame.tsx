@@ -8,17 +8,18 @@ import Navbar from "~/components/Navbar";
 import Cover from '~/components/Cover';
 import BottomBar from '~/components/BottomBar';
 
-import { GameState } from '~/state';
+import { GameState } from '~/state/game';
 import { dumbAI, easyAI } from '~/ai/basic';
 import { playAgainst } from '~/ai/def';
 
 import "./Game.scss";
+import { nameState } from '~/state/name';
 
 @observer
 export default class SinglePlayerGamePage extends Route {
     localGameState = new GameState();
     componentDidMount() {
-        this.localGameState.reset("Player 1", "PC");
+        this.localGameState.reset("Human", "PC");
     }
     render() {
         const cState = this.localGameState.currentStage;
@@ -36,10 +37,10 @@ export default class SinglePlayerGamePage extends Route {
             <Cover
                 currentPlayer={cpName}
                 won={this.localGameState.winState.won}
-                onReset={() => runIf(() => this.localGameState.reset("Player 1", "PC")) }
+                onReset={() => runIf(() => this.localGameState.reset("Human", "PC")) }
             />
             <Navbar
-                onResetGame={() => runIf(() => this.localGameState.reset("Player 1", "PC")) }
+                onResetGame={() => runIf(() => this.localGameState.reset("Human", "PC")) }
                 onUndo={() => runIf(() => this.localGameState.undo()) }
             />
             <BottomBar gameStateStage={cState} currentPlayer={cpName} otherPlayer={opName}/>
@@ -49,7 +50,7 @@ export default class SinglePlayerGamePage extends Route {
                 hightlightedPiece={this.localGameState.lastPiece}
                 highlighted={cState === "place-piece"}
                 onPlace={(x,y) => runIf(() => this.localGameState.placeGamePiece(x,y)) }
-                onResetGame={() => runIf(() => this.localGameState.reset("Player 1", "PC")) }
+                onResetGame={() => runIf(() => this.localGameState.reset("Human", "PC")) }
             />
             <OpenPieces 
                 gamePieces={this.localGameState.gamePieces}

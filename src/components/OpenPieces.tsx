@@ -1,6 +1,6 @@
 import * as React from "react";
 import { GamePiece } from "~/components/GamePiece";
-import { GamePieceList } from "~/state";
+import { GamePieceList } from "~/state/game";
 
 import "./OpenPieces.scss";
 

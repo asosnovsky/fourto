@@ -1,6 +1,6 @@
 import * as React from "react";
 import { GamePiece } from "~/components/GamePiece";
-import { GameWinState, BoardGamePieces } from "~/state";
+import { GameWinState, BoardGamePieces } from "~/state/game";
 
 import "./Board.scss";
 

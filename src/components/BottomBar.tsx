@@ -1,5 +1,5 @@
 import * as React from "react";
-import { GameStateStage } from '~/state';
+import { GameStateStage } from '~/state/game';
 
 
 export interface Props {

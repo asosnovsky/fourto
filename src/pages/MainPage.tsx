@@ -25,6 +25,7 @@ export default class MainPage extends Route {
                 <h4>What's New?</h4>
                 <ul>
                     {[
+                        "1.1.8 - naming is more dynamic now", 
                         "1.1.7 - added self-info nuke button in legal notice", 
                         "1.1.7 - visual improvements", 
                         "1.1.6 - Improved singleplayer AI",

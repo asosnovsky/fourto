@@ -1,5 +1,5 @@
 import { GamePieceProps } from "~/components/GamePiece";
-import { BoardGamePieces, GamePieceList, GameState } from '~/state';
+import { BoardGamePieces, GamePieceList, GameState } from '~/state/game';
 import { bannerState } from '~/components/TextBanner';
 
 function sleep(ms: number) {

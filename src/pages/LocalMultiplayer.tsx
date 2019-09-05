@@ -9,13 +9,37 @@ import Cover from '~/components/Cover';
 import BottomBar from '~/components/BottomBar';
 
 import "./Game.scss";
-import { GameState } from '~/state';
+import { GameState } from '~/state/game';
+import { modalState } from '~/components/Modal';
+import { nameState } from '~/state/name';
 
 @observer
 export default class LocalMultiplayerPage extends Route {
     localGameState = new GameState();
+
+    restartGame() {
+        const done = () => {
+            nameState.syncNames();
+            modalState.show = false;
+            this.localGameState.reset(nameState.p1name, nameState.p2name);
+        };
+        modalState.ask(observer( () => <>
+            <div className="modal-inner">
+                Player 1: <input type="text" value={nameState.p1name} onChange={e => {
+                    console.log(e.target.value);
+                    nameState.p1name = e.target.value;
+                }} />
+                Player 2: <input type="text" value={nameState.p2name} onChange={e => {
+                    nameState.p2name = e.target.value;
+                }} />
+            </div>
+            <div className="modal-btns">
+                <button onClick={() => done()}>Start!</button>
+            </div>
+        </>), done)
+    }
     componentDidMount() {
-        this.localGameState.reset("Player 1", "Player 2");
+        this.restartGame();
     }
     render() {
         const cState = this.localGameState.currentStage;
@@ -25,10 +49,10 @@ export default class LocalMultiplayerPage extends Route {
             <Cover
                 currentPlayer={cpName}
                 won={this.localGameState.winState.won}
-                onReset={() => this.localGameState.reset("Player 1", "Player 2")}
+                onReset={() => this.restartGame()}
             />
             <Navbar
-                onResetGame={() => this.localGameState.reset("Player 1", "Player 2")}
+                onResetGame={() => this.restartGame()}
                 onUndo={() => this.localGameState.undo()}
             />
             <BottomBar gameStateStage={cState} currentPlayer={cpName} otherPlayer={opName}/>
@@ -38,7 +62,7 @@ export default class LocalMultiplayerPage extends Route {
                 hightlightedPiece={this.localGameState.lastPiece}
                 highlighted={cState === "place-piece"}
                 onPlace={(x,y) => this.localGameState.placeGamePiece(x,y)}
-                onResetGame={() => this.localGameState.reset("Player 1", "Player 2")}
+                onResetGame={() => this.restartGame()}
             />
             <OpenPieces 
                 gamePieces={this.localGameState.gamePieces}
