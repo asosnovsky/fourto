@@ -31,6 +31,14 @@
         }
         &-btns {
             grid-area: b;
+            justify-items: center;
+            display: grid;
+            grid-template-columns: auto;
+            button {
+                grid-row: 1;
+                width: 80%;
+                margin: 0 20%;
+            }
         }
     }
 }

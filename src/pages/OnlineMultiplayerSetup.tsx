@@ -111,10 +111,15 @@ export default class OnlineMultiplayerSetupPage extends Route {
                 }}/>
             </div>
             <div className="btns">
+                <button onClick={() => {
+                        history.push("/")
+                }} className="btn-home">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAQAAAC0NkA6AAAAAmJLR0QA/4ePzL8AAAE5SURBVFjD7dQ9S8NAHMfxb6Uogo+DDnXJVhdxclNERPAdiEtxcnbrW8jq6OokCCKIoxbqw1AKTi7i4mJR6VCQDlr6d0iuBNvo9bxDkft9txD4DLkL/MEFlCgRuCRWeEIQ6qy7ATIUaSFxbUIGbBNjHHUA1SmTNol57rsIQXhgIX4j+dRoBZo9CUFoUgBghzdzZIjdVEC1zzCwyKMZMsP1t4QgVAmAKc76R5apaRGC8MIakCWkbXpgdWpRJANs6BKjHPYFqE6Y0CVmuTUiBOGOOR1ik1djIjrUW18DWcIfAao9BtOIac6tEIJwSa4XsdS5THZ6ZvUzsZ34LdjqPT7UAIxwYB1QHTMeIRWEhhOigVCJkCtuyDtB8lQpJ7+KC6RrHvHIv0bS5hGPeMQjHvHILyAX1pEyfib7AN2GgOq5GZnpAAAAAElFTkSuQmCC"/>
+                </button>
                 <button disabled={this.state.uid === undefined} onClick={async () => {
                     modalState.ask(() => <>
                         <div className="modal-content-inner">
-                            <span>Opponent Secret Passphrase: </span>
+                            <h4 style={{textAlign: "center"}}>Opponent Secret Passphrase: </h4>
                             <input type="text" value={this.state.opnSPhrase} onChange={e => {
                                 this.setState({ opnSPhrase: e.target.value });
                             }}/>
@@ -129,7 +134,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
                                     history.push(`/online/${r.id}`);
                                     modalState.show = false;
                                 }
-                            }}>Play</button>
+                            }}>Connect</button>
                             <button onClick={() => {
                                 modalState.show = false;
                             }}>Cancel</button>
