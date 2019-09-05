@@ -120,7 +120,9 @@ export default class OnlineMultiplayerSetupPage extends Route {
                     modalState.ask(() => <>
                         <div className="modal-content-inner">
                             <h4 style={{textAlign: "center"}}>Opponent Secret Passphrase: </h4>
-                            <input type="text" value={this.state.opnSPhrase} onChange={e => {
+                            <input style={{
+                                width: "100%"
+                            }} type="text" value={this.state.opnSPhrase} onChange={e => {
                                 this.setState({ opnSPhrase: e.target.value });
                             }}/>
                         </div>

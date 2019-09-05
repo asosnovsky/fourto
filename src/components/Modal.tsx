@@ -15,12 +15,13 @@ class ModalState {
 }
 export const modalState = new ModalState();
 export default observer(function Modal () {
-    return <div className="modal" onClick={() => {
-        modalState.show = false;
-    }} style={{ 
+    return <div className="modal" style={{ 
             opacity: modalState.show ? 1 : 0,
             top: modalState.show ? '0' : -1000,
         }}>
+        <div className="modal-background" onClick={() => {
+            modalState.show = false;
+        }}></div>
         <div className="modal-content">
             <modalState.msg key="content"/>
         </div>
