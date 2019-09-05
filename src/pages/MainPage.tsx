@@ -5,13 +5,14 @@ import { history } from "~/router";
 import "./MainPage.scss";
 import { bannerState } from '~/components/TextBanner';
 import { modalState } from '~/components/Modal';
+import manifest from "~/manifest.json";
 
 export default class MainPage extends Route {
     public render() {
         return <div id="main-page">
             <h1>
-                {"FourTO".split("").map( (l, i) => <span key={i} id={`k${i}`}>{l}</span>)}
-                <i>1.1.1</i>
+                {manifest.name.split("").map( (l, i) => <span key={i} id={`k${i}`}>{l}</span>)}
+                <i>{manifest.version}</i>
             </h1>
             <div className="btns">
                 <button className="blue" onClick={() => history.push("/singleplayer")}>Single Player</button>
