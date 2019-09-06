@@ -12,6 +12,7 @@ import "./OnlineMultiplayerSetup.scss";
 import { modalState } from '~/components/Modal';
 import { bannerState } from '~/components/TextBanner';
 import { nameState } from '~/state/name';
+import { observer } from 'mobx-react';
 
 function QRDisplayer(p : { code?: string; }) {
     return <>
@@ -27,6 +28,15 @@ interface GameMetaData {
     lastplayed: number;
     turn: number | string;
 }
+const NameTag = observer(function NameTag() {
+    return <>
+        <span>Your Name: </span>
+        <input type="text" value={nameState.p1name} onChange={e => {
+            nameState.p1name = e.target.value;
+            nameState.syncNames();
+        }}/>
+    </>
+});
 export default class OnlineMultiplayerSetupPage extends Route {
     state: { 
         passphrase?: string; 
@@ -99,11 +109,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
         if ( this.state.passphrase ) { qrCls += " --loaded"};
         return <div id="online-multiplayer-setup-page">
             <div className="name-tab">
-                <span>Your Name: </span>
-                <input type="text" value={nameState.p1name} onChange={e => {
-                    nameState.p1name = e.target.value;
-                    nameState.syncNames();
-                }}/>
+                <NameTag/>
             </div>
             <div className="btns">
                 <button onClick={() => {
@@ -128,7 +134,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
                             <button onClick={async () => {
                                 if ( this.state.passphrase === this.state.opnSPhrase) {
                                     bannerState.warn("This is your passphrase!", 3000)
-                                }   else if ( this.state.passphrase || this.state.passphrase.length === 0 ) {
+                                }   else if ( !this.state.passphrase || this.state.passphrase.length === 0 ) {
                                     bannerState.warn("Please enter your opponent passphrase!", 3000)
                                 } else  {
                                     const ouid = (await sphrasedb.child("/ptu/" + this.state.opnSPhrase).once('value')).val();
