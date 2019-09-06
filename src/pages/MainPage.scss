@@ -105,4 +105,19 @@
             width: 5em;
         }
     }
+    .update-btn {
+        position: absolute;
+        bottom: 0;
+        font-size: 0.5em;
+        @media (orientation:landscape) {
+            height: 1em;
+            width: 5em;
+            right: 6em;
+        }
+        @media (orientation:portrait) {
+            height: 2em;
+            width: 5em;
+            right: 6em;
+        }
+    }
 }

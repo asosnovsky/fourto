@@ -9,7 +9,6 @@ export interface Props {
     spots: BoardGamePieces,
     hightlightedPiece: number[] | null,
     highlighted: boolean,
-    onResetGame: () => void,
     onPlace: (x: number, y: number) => void,
 }
 export default  function Board ( props: Props ) {

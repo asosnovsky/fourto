@@ -56,6 +56,11 @@ export default class MainPage extends Route {
                     </div>
                 </>)
             }}>Legal</button>
+            <button className="update-btn" onClick={() => {
+                deleteAllCookies();
+                localStorage.clear();
+                window.location.reload(true);
+            }}>Update</button>
         </div>
     }
 }

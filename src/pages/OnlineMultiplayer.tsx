@@ -85,7 +85,8 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
             <Navbar
                 onResetGame={() => history.push('/online')}
                 onUndo={() => runIf(() => {
-                    this.localGameState.undo()
+                    // this.localGameState.undo()
+                    bannerState.notify("WIP - coming soon (not supported in online mode yet)", 3000);
                 })}
             />
             <BottomBar gameStateStage={cState} currentPlayer={cpName} otherPlayer={opName}/>
@@ -104,7 +105,6 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
                         "updated": this.lastUpdate,
                     });
                 })}
-                onResetGame={() => history.push('/online')}
             />
             <OpenPieces 
                 gamePieces={this.localGameState.gamePieces}

@@ -1,4 +1,5 @@
 export default `
+1.1.10 - added update button
 1.1.9 - fixed bug where typing secret phrase does not work
 1.1.9 - fixed bug where you cannot rename your online alias
 1.1.8 - naming is more dynamic now
