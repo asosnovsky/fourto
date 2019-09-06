@@ -2,7 +2,7 @@ import { observable, action, computed } from "mobx";
 
 import { GamePieceOptions } from "~/components/GamePiece";
 import { bannerState } from '~/components/TextBanner';
-import { logdb, getUID, aliasdb } from "~/database";
+import { logdb, getUID, aliasdb } from "~/database/index";
 import { nameState } from './name';
 
 export type GameWinState = {

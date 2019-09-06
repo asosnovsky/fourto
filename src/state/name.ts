@@ -1,5 +1,5 @@
 import { observable, action, computed } from "mobx";
-import { getAliases, saveAliases } from '~/database';
+import { getAliases, saveAliases } from '~/database/index';
 
 const basics = getAliases();
 class NameState {

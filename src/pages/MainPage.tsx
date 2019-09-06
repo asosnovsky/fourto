@@ -6,9 +6,9 @@ import "./MainPage.scss";
 import { modalState } from '~/components/Modal';
 import manifest from "~/manifest.json";
 import { deleteAllCookies } from '~/cookie';
-import { auth } from '~/database';
+import { auth } from '~/database/index';
 
-import releaseNotes from "~/release_notes.ts";
+import releaseNotes, { version } from "~/release_notes.ts";
 
 
 
@@ -16,8 +16,8 @@ export default class MainPage extends Route {
     public render() {
         return <div id="main-page">
             <h1>
-                {manifest.name.split("").map( (l, i) => <span key={i} id={`k${i}`}>{l}</span>)}
-                <i>{manifest.version}</i>
+                {"FourTO".split("").map( (l, i) => <span key={i} id={`k${i}`}>{l}</span>)}
+                <i>{version}</i>
             </h1>
             <div className="btns">
                 <button className="blue" onClick={() => history.push("/singleplayer")}>Single Player</button>

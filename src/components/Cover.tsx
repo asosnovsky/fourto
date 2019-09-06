@@ -1,4 +1,5 @@
 import * as React from "react";
+import { history } from '~/router';
 
 
 export interface Props {
@@ -16,6 +17,9 @@ export default function Cover(p: Props) {
             <button onClick={()=>{
                 p.onReset();
             }}>Play Again?</button>
+            <button onClick={()=>{
+                history.push("/");
+            }}>Back Home</button>
         </div>
     </div>
 }

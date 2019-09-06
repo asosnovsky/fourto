@@ -5,7 +5,7 @@ import moment from "moment";
 
 
 import { history } from "~/router";
-import { getUID, gamedb, getSecretPhrase, sphrasedb, aliasdb } from '~/database';
+import { getUID, gamedb, getSecretPhrase, sphrasedb, aliasdb, createGameThenGoToIt } from '~/database/index';
 import Loader from '~/components/Loader';
 
 import "./OnlineMultiplayerSetup.scss";
@@ -84,26 +84,6 @@ export default class OnlineMultiplayerSetupPage extends Route {
     componentWillUnmount() {
         this.removeListener();
     }
-    async createGame(opn: string, opnName: string = "Player 2") {
-        const uid = await getUID();
-        const update: any = {
-            users: [
-                uid, opn,
-            ],
-            current: Math.random() > 0.5 ? uid : opn,
-            state: [
-                '----|----|----|----',
-                '----|----|----|----',
-                '----|----|----|----',
-                '----|----|----|----',
-            ],
-            piece: null,
-            winState: { won: false },
-            started: Date.now(),
-            updated: Date.now(),
-        };
-        return await gamedb.add(update)
-    }
     public render() {
         let qrCls = "qr";
         if ( this.state.passphrase ) { qrCls += " --loaded"};
@@ -123,7 +103,6 @@ export default class OnlineMultiplayerSetupPage extends Route {
                             <h4 style={{textAlign: "center"}}>Opponent Secret Passphrase: </h4>
                             <input style={{
                                 width: "100%",
-                                marginBottom: "10%"
                             }} type="text" value={this.state.opnSPhrase} onChange={e => {
                                 const value = e.target.value.toLowerCase().split(' ').join('-');
                                 e.target.value = value;
@@ -141,8 +120,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
                                     if (!ouid) {
                                         bannerState.warn("Invalid passphrase!", 3000);
                                     }   else    {
-                                        const r = await this.createGame(ouid);
-                                        history.push(`/online/${r.id}`);
+                                        await createGameThenGoToIt(ouid);
                                         modalState.show = false;
                                     }
                                 }

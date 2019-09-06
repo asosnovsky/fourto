@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Route, RouteComponentProps } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react"
 
 import Board from "~/components/Board";
@@ -10,7 +10,7 @@ import BottomBar from '~/components/BottomBar';
 
 import "./Game.scss";
 import { GameState } from '~/state/game';
-import { gamedb, getUID, aliasdb } from '~/database';
+import { gamedb, aliasdb, createGameThenGoToIt } from '~/database/index';
 import { history } from '~/router';
 import { bannerState } from '~/components/TextBanner';
 import Loader from '~/components/Loader';
@@ -80,7 +80,13 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
             <Cover
                 currentPlayer={cpName}
                 won={this.localGameState.winState.won}
-                onReset={() => history.push('/online')}
+                onReset={async () => {
+                    if ( this.state.opnUid ) {
+                        await createGameThenGoToIt(this.state.opnUid);
+                    }   else    {
+                        bannerState.warn("Err: opUID == null", 4000);
+                    }
+                }}
             />
             <Navbar
                 onResetGame={() => history.push('/online')}
@@ -113,7 +119,6 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
                 onTake={i => runIf(async () => {
                     this.localGameState.givePiece(i);
                     this.lastUpdate = Date.now();
-                    console.log(this.state.opnUid)
                     await this.gameDoc.update({
                         "lastMove": ['g', i],
                         "state": this.localGameState.toStateStrings(),

@@ -1,4 +1,8 @@
+export const version = "1.1.10";
 export default `
+1.1.10 - added reply notifier for new games
+1.1.10 - added reply direct after online games
+1.1.10 - cleaned styles
 1.1.10 - added update button
 1.1.9 - fixed bug where typing secret phrase does not work
 1.1.9 - fixed bug where you cannot rename your online alias

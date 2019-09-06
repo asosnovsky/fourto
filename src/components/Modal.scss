@@ -18,26 +18,36 @@
 
     &-content {
         position: absolute;
-        left: 10vw;
         width: 70vw;
-        padding: 5vw;
-        top: 25vh;
         max-height: 50vh;
-        overflow-y: scroll;
+        padding: 6% 5vw;
+        top: 15%;
+        left: 10vw;
 
+        overflow-y: auto;
+        z-index: 6;
+        
         background: white;
         box-shadow: 10px 10px 30px 10px #f884;
+        
+        
         display: grid;
         grid-template: "n" "i" "b";
         grid-template-rows: 10% 80% 10%;
-        z-index: 6;
-        max-width: 90vh;
+
+        @media (orientation:landscape) {
+            font-size: 1.5em;
+        }
+        @media (orientation:portrait) {
+            font-size: 1em;
+        }
 
         &-nav {
             grid-area: n;
         }
         &-inner {
             grid-area: i;
+            margin-bottom: 5%;
         }
         &-btns {
             grid-area: b;
