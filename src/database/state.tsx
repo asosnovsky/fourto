@@ -9,9 +9,10 @@ import { history } from '~/router';
 let uid: string;
 let sphrase: string;
 let gamelistener: () => void;
+let forcePopUp = false;
 
 async function cleanUp() {
-    gamelistener();
+    if(gamelistener) gamelistener();
     // if (sphrase) {
     //     await Promise.all([
     //         sphrasedb.child(`/ptu/${sphrase}`).remove(),
@@ -53,6 +54,10 @@ export const getUID = async () => {
     return uid;
 }
 
+export function setPopUpStatus(status: boolean) {
+    forcePopUp = status
+}
+
 // Private Functions
 
 async function genSecPhrase(uid: string): Promise<string> {
@@ -75,33 +80,41 @@ function startGameListener() {
     orderBy('started', "desc").
     limit(1).
     onSnapshot( async snap => {
-        if( !(
-            (history.location.pathname.indexOf("/online/") === 0) ||
-            (history.location.pathname.indexOf("/local-multiplayer") === 0)
-        ) && (snap.docs.length > 0) ) {
-            const game = snap.docs[0];
-            const gameData = game.data();
-            const ouid = (gameData["users"] as string[]).filter( u => u !== uid )[0];
-            const opName = (await aliasdb.child(ouid).once('value')).val();
-            console.log(gameData, opName);
-            modalState.ask( () => <>
-                <div className="modal-content-inner">
-                    <p style={{textAlign: "center"}}>
-                        <b>{opName}</b> has invited you to a game {moment(gameData["started"]).fromNow()}! 
-                        <br/><br/>
-                        Would you like to accept?
-                    </p>
-                </div>
-                <div className="modal-content-btns">
-                    <button className="green" onClick={() => {
-                        history.push("/online/" + game.id);
-                        modalState.show = false;
-                    }}>Accept</button>
-                    <button className="red" onClick={() => {
-                        modalState.show = false;
-                    }}>Ignore</button>
-                </div>
-            </> );
+        if ( 
+            forcePopUp || (
+                (history.location.pathname.indexOf("/online/") !== 0) &&  
+                (history.location.pathname.indexOf("/local-multiplayer") !== 0 )
+            )
+        ) {
+            setPopUpStatus(false);
+            processSnap(snap);
         }
     });
+}
+async function processSnap(snap: firebase.firestore.QuerySnapshot) {
+    if( snap.docs.length > 0 ) {
+        const game = snap.docs[0];
+        const gameData = game.data();
+        const ouid = (gameData["users"] as string[]).filter( u => u !== uid )[0];
+        const opName = (await aliasdb.child(ouid).once('value')).val();
+        console.log(gameData, opName);
+        modalState.ask( () => <>
+            <div className="modal-content-inner">
+                <p style={{textAlign: "center"}}>
+                    <b>{opName}</b> has invited you to a game {moment(gameData["started"]).fromNow()}! 
+                    <br/><br/>
+                    Would you like to accept?
+                </p>
+            </div>
+            <div className="modal-content-btns">
+                <button className="green" onClick={() => {
+                    history.replace("/online/" + game.id);
+                    window.location.reload();
+                }}>Accept</button>
+                <button className="red" onClick={() => {
+                    modalState.show = false;
+                }}>Ignore</button>
+            </div>
+        </> );
+    }
 }

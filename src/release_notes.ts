@@ -1,5 +1,8 @@
-export const version = "1.1.10";
+export const version = "1.1.12";
 export default `
+1.1.12 - can delete games
+1.1.12 - styling fixes
+1.1.11 - fixed various online-play errors
 1.1.10 - added reply notifier for new games
 1.1.10 - added reply direct after online games
 1.1.10 - cleaned styles

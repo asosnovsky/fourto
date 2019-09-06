@@ -87,6 +87,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
     public render() {
         let qrCls = "qr";
         if ( this.state.passphrase ) { qrCls += " --loaded"};
+        const numOfGames = this.state.games.length;
         return <div id="online-multiplayer-setup-page">
             <div className="name-tab">
                 <NameTag/>
@@ -138,28 +139,33 @@ export default class OnlineMultiplayerSetupPage extends Route {
             <div className={qrCls}>
                 <QRDisplayer code={this.state.passphrase}/>
             </div>
-            <table className="pure-table">
-                {(this.state.games.length > 0) && <thead>
-                    <tr>
-                        <th>Opponent</th>
-                        <th>Turn #</th>
-                        <th>Last Played</th>
-                        <th></th>
-                    </tr>
-                </thead>}
-                <tbody>
-                    {this.state.games.map( ({uid, turn, lastplayed, opponent}) => <tr key={uid}>
-                        <td>{opponent}</td>
-                        <td>{turn}</td>
-                        <td>{moment(lastplayed).fromNow()}</td>
-                        <td>
-                            <button onClick={() => history.push("/online/" + uid)}>
-                            Play
+            {(numOfGames > 0) && <div className="table">
+                <div className="table-title">
+                    <div className="table-cell">Opponent</div>
+                    <div className="table-cell">Turn #</div>
+                    <div className="table-cell">Last Played</div>
+                    <div className="table-cell"></div>
+                </div>
+                <div className="table-rows">
+                    {this.state.games.map( ({uid, turn, lastplayed, opponent}) => <div key={uid} className="table-rows-row">
+                        <div className="table-cell no-pad X">
+                            <button className="red" onClick={async () => {
+                                await gamedb.doc(uid).delete();
+                            }}>
+                                X
                             </button>
-                        </td>
-                    </tr> )}
-                </tbody>
-            </table>
+                        </div>
+                        <div className="table-cell">{opponent}</div>
+                        <div className="table-cell">{turn}</div>
+                        <div className="table-cell">{moment(lastplayed).fromNow()}</div>
+                        <div className="table-cell no-pad">
+                            <button onClick={() => history.push("/online/" + uid)}>
+                                Play
+                            </button>
+                        </div>
+                    </div>)}
+                </div>
+            </div>}
         </div>
     }
 }

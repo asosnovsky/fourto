@@ -62,6 +62,7 @@ export class GameState {
                 const [hole, tall, circle, black] = bin.split("").map(n => n === "1");
                 this.gamePieces.push({ hole, tall, circle, black });       
             }   else    {
+                this.gamePieces.push(null);
                 alreadyPlayed.push(null);
             }
         };
@@ -131,7 +132,7 @@ export class GameState {
             bannerState.notify("Undo is allowed only once!", 1000);
         }
     }
-    @action givePiece(i: number) {
+    @action givePiece(i: number, resetFunc?: () => void) {
         if (this.stagePiece === null) {
             if (this.gamePieces[i] !== null) {
                 this.log(`${this.currentPlayer}|g|${stringifyGamePiece(this.gamePieces[i])}`);
@@ -140,7 +141,10 @@ export class GameState {
             }   else    {
                 bannerState.confirm(
                     "Err: G[stagePiece] !== null. Restart Game?", 
-                    () => this.reset(this.p1name, this.p2name)
+                    () => { 
+                        if(resetFunc) resetFunc();
+                        else this.reset(this.p1name, this.p2name)
+                    }
                 )
             }
         }else{

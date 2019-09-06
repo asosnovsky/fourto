@@ -10,7 +10,7 @@ import BottomBar from '~/components/BottomBar';
 
 import "./Game.scss";
 import { GameState } from '~/state/game';
-import { gamedb, aliasdb, createGameThenGoToIt } from '~/database/index';
+import { gamedb, aliasdb, createGameThenGoToIt, setPopUpStatus } from '~/database/index';
 import { history } from '~/router';
 import { bannerState } from '~/components/TextBanner';
 import Loader from '~/components/Loader';
@@ -31,13 +31,15 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
         this.lastUpdate = Date.now();
 
         const unsubGameDoc = this.gameDoc.onSnapshot( snap => {
-            if (this.lastUpdate !== snap.get("updated")) {
+            if (this.lastUpdate < snap.get("updated")) {
                 const lastMove = snap.get("lastMove");
                 if( lastMove ) {
                     if (lastMove[0] === "p") {
                         this.localGameState.placeGamePiece(lastMove[1], lastMove[2]);
                     }   else if (lastMove[0] === "g") {
-                        this.localGameState.givePiece(lastMove[1]);
+                        this.localGameState.givePiece(lastMove[1], () => {
+                            history.push("/online");
+                        });
                     }   else    {
                         bannerState.confirm(
                             `Error: lastMove = ${lastMove[0]} Invalid Move. Exit Game?`,
@@ -46,7 +48,6 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
                     }
                 }
                 this.lastUpdate = snap.get("updated");
-                this.localGameState.p2name = snap.get("aliases")[ouid];
                 this.localGameState.currentPlayer = snap.get("current") === ouid ? 1 : 0;
             }
         });
@@ -73,6 +74,9 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
                 bannerState.notify("Please wait for opponent move!", 2000)
             }
         }
+        if(this.localGameState.winState.won) {
+            setPopUpStatus(true);
+        }
         return <div id="game-page">
             {!this.state.loaded && <div className="game-page-loader">
                 <Loader/>
@@ -89,6 +93,7 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
                 }}
             />
             <Navbar
+                msg="Going back to main page, you can always revisit this game after in the online page."
                 onResetGame={() => history.push('/online')}
                 onUndo={() => runIf(() => {
                     // this.localGameState.undo()
@@ -117,7 +122,9 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
                 focusPiece={this.localGameState.stagePiece}
                 highlighted={cState === "select-piece"}
                 onTake={i => runIf(async () => {
-                    this.localGameState.givePiece(i);
+                    this.localGameState.givePiece(i, () => {
+                        history.push("/online");
+                    });
                     this.lastUpdate = Date.now();
                     await this.gameDoc.update({
                         "lastMove": ['g', i],

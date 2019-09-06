@@ -20,7 +20,7 @@
         button {
             margin-top: 2vh;
             width: 40%;
-            height: 60%;
+            // height: 60%;
             max-width: 50vh;
             @media (orientation:landscape) {
                 padding: 0;
@@ -62,7 +62,56 @@
             }
         }
     }
-    table {
+    .table {
         grid-area: g;
+        display: grid;
+        grid-template-rows: 4em 1fr;
+        height: 450px;
+        overflow-y: auto;
+        font-size: 17px;
+        
+        .table-cell {
+            padding: 10px;
+            display: flex; 
+            margin: 0;
+            grid-row: 1;
+            border: 1px solid #0002;
+            &.no-pad {
+                justify-content: center;
+                padding: 0;
+            }
+            &.X {
+                height: 2em;
+                border: none;
+                button {
+                    margin: 0;
+                }
+            }
+        }
+        
+        &-title {
+            grid-row: 1;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 9em 5em 5em 5em;
+            .table-cell {
+                background: #0002;
+            }
+            
+        }
+        &-rows {
+            grid-row: 2;
+            &-row {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 2em 7em 5em 5em 5em;
+                button {
+                    margin-top: 1.5em;
+                    height: 3em;
+                    width: 100%;
+                    box-shadow: 0px 0px 10px 1px #7c7c9030;
+                }
+            }
+        }
     }
 }

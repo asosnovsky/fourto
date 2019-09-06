@@ -12,6 +12,15 @@ import OnlineMultiplayerPage from './pages/OnlineMultiplayer';
 
 export const history = createBrowserHistory();
 
+let prevLocation: string;
+history.listen(nextLocation => {
+    prevLocation = nextLocation.pathname;
+});
+
+export const getPrevLocation = () => {
+    return prevLocation;
+}
+
 export default class AppRouter extends React.Component {
     render() {
         return (

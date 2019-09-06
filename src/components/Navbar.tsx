@@ -3,13 +3,15 @@ import { history } from '~/router';
 import { bannerState } from './TextBanner';
 
 export interface Props {
+    msg?: string;
     onResetGame: () => void;
     onUndo: () => void;
 }
 export default function Navbar (props: Props) {
+    const msg = props.msg || "Going back to main page, this means that your game is over.";
     return <div className="navbar">
         <button onClick={() => {
-            bannerState.confirm("Going back to main page, this means that your game is over.", () => {
+            bannerState.confirm(msg, () => {
                 history.push("/")
             })
         }}>
