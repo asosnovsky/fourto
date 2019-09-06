@@ -13,13 +13,12 @@ let forcePopUp = false;
 
 async function cleanUp() {
     if(gamelistener) gamelistener();
-    // if (sphrase) {
-    //     await Promise.all([
-    //         sphrasedb.child(`/ptu/${sphrase}`).remove(),
-    //         sphrasedb.child(`/utp/${uid}`).remove(),
-    //     ]);
-    // }
-    // return true;
+    if (sphrase) {
+        await Promise.all([
+            sphrasedb.child(`/ptu/${sphrase}`).remove(),
+            sphrasedb.child(`/utp/${uid}`).remove(),
+        ]);
+    }
 }
 window.addEventListener("unload", cleanUp)
 window.addEventListener("beforeunload", cleanUp)

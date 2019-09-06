@@ -10,7 +10,7 @@ import BottomBar from '~/components/BottomBar';
 
 import "./Game.scss";
 import { GameState } from '~/state/game';
-import { gamedb, aliasdb, createGameThenGoToIt, setPopUpStatus } from '~/database/index';
+import { gamedb, aliasdb, createGameThenGoToIt, setPopUpStatus, sphrasedb } from '~/database/index';
 import { history } from '~/router';
 import { bannerState } from '~/components/TextBanner';
 import Loader from '~/components/Loader';
@@ -53,10 +53,16 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
         });
         const p2aliasListener = aliasdb.child(ouid).on('value', snap => {
             this.localGameState.p2name = snap.val();
-        })
+        });
+        // const unsubOtherPlayer = sphrasedb.child(`/utp/${ouid}`).on('value', snap => {
+        //     if(!snap.val()) {
+        //         bannerState.notify(`${this.localGameState.p2name} has went offline!`)
+        //     }
+        // });
         this.unsub = () => {
             unsubGameDoc();
             aliasdb.child(ouid).off('value', p2aliasListener);
+            // sphrasedb.child(`/utp/${ouid}`).on('value', unsubOtherPlayer);
         };
         this.setState({ loaded: true });
     }

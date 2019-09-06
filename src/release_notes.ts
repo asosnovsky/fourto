@@ -1,5 +1,6 @@
-export const version = "1.1.12";
+export const version = "1.1.13";
 export default `
+1.1.13 - better AI for single player
 1.1.12 - can delete games
 1.1.12 - styling fixes
 1.1.11 - fixed various online-play errors

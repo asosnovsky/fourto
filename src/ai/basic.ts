@@ -24,51 +24,117 @@ export const dumbAI : AIPlayer = {
     }
 }
 
-export const easyAI: AIPlayer = {
-    placePiece(p, b) {
-        const weights = computeQTab(b, p);
-        interface Out { cell: number; x: number; y: number };
-        const out: Out = weights.reduce((last: Out | null, nrow, x) => {
-            const best: Out = nrow.reduce( (lc: Out | null, cell, y) => {
-                if ( (lc === null) || (lc.cell < cell) ) return {cell, x, y};
-                return lc; 
-            } , null)
-            if( (last === null) || (last.cell < best.cell) ) return best;
-            return last;
-        }, null);
-        // console.log("giving", out, weights);
-        return { x: out.x, y: out.y };
-    },
-    givePiece(u, b) {
-        interface Out { cell: number; x: number; y: number };
-        const out = u.map( (p, i) => {
-            if (p !== null ) {
-                const qtab = computeQTab(b, p);
-                // console.log("checking", {...p}, qtab);
-                return {
-                    i,
-                    val: qtab.reduce((last: Out | null, nrow, x) => {
-                        const best: Out = nrow.reduce( (lc: Out | null, cell, y) => {
-                            if ( (lc === null) || (lc.cell < cell) ) return {cell, x, y};
+// export const easyAI: AIPlayer = makeAIFromQTab(computeQTab)
+export const easyAI: AIPlayer = makeAIFromQTab(computeQTab2)
+// {
+//     placePiece(p, b) {
+//         const weights = computeQTab(b, p);
+//         interface Out { cell: number; x: number; y: number };
+//         const out: Out = weights.reduce((last: Out | null, nrow, x) => {
+//             const best: Out = nrow.reduce( (lc: Out | null, cell, y) => {
+//                 if ( (lc === null) || (lc.cell < cell) ) return {cell, x, y};
+//                 if ( lc.cell === cell ) {
+//                     if( Math.random() > (0.5 + Math.random()*Math.random()) ) {
+//                         return lc; 
+//                     }  else  {
+//                         return {cell, x, y};
+//                     }
+//                 }
+//                 return lc; 
+//             } , null)
+//             if( (last === null) || (last.cell < best.cell) ) return best;
+//             return last;
+//         }, null);
+//         // console.log("giving", out, weights);
+//         return { x: out.x, y: out.y };
+//     },
+//     givePiece(u, b) {
+//         interface Out { cell: number; x: number; y: number };
+//         const out = u.map( (p, i) => {
+//             if (p !== null ) {
+//                 const qtab = computeQTab(b, p);
+//                 // console.log("checking", {...p}, qtab);
+//                 return {
+//                     i,
+//                     val: qtab.reduce((last: Out | null, nrow, x) => {
+//                         const best: Out = nrow.reduce( (lc: Out | null, cell, y) => {
+//                             if ( (lc === null) || (lc.cell < cell) ) return {cell, x, y};
+//                             return lc; 
+//                         } , null)
+//                         if( (last === null) || (last.cell < best.cell) ) return best;
+//                         if ( (last.cell === best.cell) && (Math.random() < 0.5) ) return best; 
+//                         return last;
+//                     }, null)
+//                 }
+//             }   else    {
+//                 return {i, val: {cell: 100000}};
+//             }
+//         }).reduce( (last, incm) => {
+//             if( last.val.cell < incm.val.cell ) {
+//                 return last;
+//             }   else    {
+//                 return incm;
+//             }
+//         } )
+//         // console.log(out);
+//         return out.i;
+//     }
+// }
+
+function makeAIFromQTab(compQTable: (b: BoardGamePieces, p: GamePieceOptions) => number[][]) : AIPlayer {
+    return {
+        placePiece(p, b) {
+            const weights = compQTable(b, p as GamePieceOptions);
+            interface Out { cell: number; x: number; y: number };
+            const out: Out = weights.reduce((last: Out | null, nrow, x) => {
+                const best: Out = nrow.reduce( (lc: Out | null, cell, y) => {
+                    if ( (lc === null) || (lc.cell < cell) ) return {cell, x, y};
+                    if ( lc.cell === cell ) {
+                        if( Math.random() < 0.25 ) {
                             return lc; 
-                        } , null)
-                        if( (last === null) || (last.cell < best.cell) ) return best;
-                        if ( (last.cell === best.cell) && (Math.random() < 0.5) ) return best; 
-                        return last;
-                    }, null)
-                }
-            }   else    {
-                return {i, val: {cell: 100000}};
-            }
-        }).reduce( (last, incm) => {
-            if( last.val.cell < incm.val.cell ) {
+                        }  else  {
+                            return {cell, x, y};
+                        }
+                    }
+                    return lc; 
+                } , null)
+                if( (last === null) || (last.cell < best.cell) ) return best;
                 return last;
-            }   else    {
-                return incm;
-            }
-        } )
-        // console.log(out);
-        return out.i;
+            }, null);
+            // console.log("giving", out, weights);
+            return { x: out.x, y: out.y };
+        },
+        givePiece(u, b) {
+            interface Out { cell: number; x: number; y: number };
+            const out = u.map( (p, i) => {
+                if (p !== null ) {
+                    const qtab = compQTable(b, p);
+                    // console.log("checking", {...p}, qtab);
+                    return {
+                        i,
+                        val: qtab.reduce((last: Out | null, nrow, x) => {
+                            const best: Out = nrow.reduce( (lc: Out | null, cell, y) => {
+                                if ( (lc === null) || (lc.cell < cell) ) return {cell, x, y};
+                                return lc; 
+                            } , null)
+                            if( (last === null) || (last.cell < best.cell) ) return best;
+                            if ( (last.cell === best.cell) && (Math.random() < 0.5) ) return best; 
+                            return last;
+                        }, null)
+                    }
+                }   else    {
+                    return {i, val: {cell: 100000}};
+                }
+            }).reduce( (last, incm) => {
+                if( last.val.cell < incm.val.cell ) {
+                    return last;
+                }   else    {
+                    return incm;
+                }
+            } )
+            // console.log(out);
+            return out.i;
+        }
     }
 }
 
@@ -118,19 +184,9 @@ function computeQTab(b: BoardGamePieces, p: GamePieceOptions, nullValue = -10000
             keys.forEach( key => {
                 if( b[x][y] === null ) {
                     updateWeight(x, y, rowMatched[key])
-                    // if (rowMatched[key] === 3) {
-                    //     weights[x][y] += (rowMatched[key] * 10)
-                    // }   else    {
-                    //     weights[x][y] += rowMatched[key]
-                    // }
                 }
                 if( b[y][x] === null ) {
                     updateWeight(y, x, colMatched[key])
-                    // if ( colMatched[key] === 3 ) {
-                    //     weights[y][x] += (colMatched[key] * 10)
-                    // }   else    {
-                    //     weights[y][x] += colMatched[key]
-                    // }
                 }
             });
         };
@@ -151,21 +207,73 @@ function computeQTab(b: BoardGamePieces, p: GamePieceOptions, nullValue = -10000
         keys.forEach( key => {
             if( b[x][y1] === null ) {
                 updateWeight(x, y1, diagLMatched[key])
-                // if (diagLMatched[key] === 3) {
-                //     weights[x][y1] += (diagLMatched[key] * 10)
-                // }   else    {
-                //     weights[x][y1] += diagLMatched[key]
-                // }
             }
             if( b[y2][x] === null ) {
                 updateWeight(x, y2, diagLMatched[key])
-                // if ( diagRMatched[key] === 3 ) {
-                //     weights[y2][x] += (diagRMatched[key] * 10)
-                // }   else    {
-                //     weights[y2][x] += diagRMatched[key]
-                // }
             }
         });
     };
     return weights
+}
+
+function computeQTab2(b: BoardGamePieces, p: GamePieceOptions, nullValue = -10000) {
+    return updateSplitWeights(b, p, computeQTab(b, p, null));
+}
+
+function updateSplitWeights(b: BoardGamePieces, p: GamePieceOptions, weights: number[][]) {
+    const keys: Array<keyof GamePieceOptions> = ["black", "circle", "hole", "tall"];
+
+    keys.forEach( key => {
+        const matches = countMatches(key, b, p[key]);
+        const opmatches = countMatches(key, b, !p[key]);
+        const nearOp = [...opmatches.cols, ...opmatches.rows, opmatches.diagL, opmatches.diagR].filter( n => n === 3);
+        if (nearOp.length > 0) {
+            matches.rows.forEach( (v, x) => {
+                if( v === 2 ) {
+                    weights[x] = [0, 0, 0, 0];
+                }
+                if (matches.cols[x] === 2) {
+                    for (let i = 0; i < 3; i++) {
+                        weights[x][i] = 0;                        
+                    }
+                }
+            } );
+            if ( matches.diagL === 2 ) {
+                for (let i = 0; i < 3; i++) {
+                    weights[i][3 - i] = 0;                        
+                }
+            }
+            if ( matches.diagR === 2 ) {
+                for (let i = 0; i < 3; i++) {
+                    weights[i][i] = 0;                        
+                }
+            }
+        }
+    });
+    
+    return weights;
+}
+
+function countMatches(key: keyof GamePieceOptions, b: BoardGamePieces, val: boolean) {
+    const [rows, cols, ..._] = zeros();
+    let [diagL, diagR] = [0, 0];
+    for (let x = 0; x < 4; x++) {
+        for (let y = 0; y < 4; y++) {
+            if( b[x][y] !== null ) {
+                rows[x] += b[x][y][key] === val ? 1 : 0;
+            }
+            if( b[y][x] !== null ) {
+                cols[y] += b[y][x][key] === val ? 1 : 0;
+            }
+        };
+        const y1 = 3 - x;
+        const y2 = x;
+        if( b[x][y1] !== null) {
+            diagL += b[x][y1][key] === val ? 1 : 0;
+        } 
+        if( b[x][y2] !== null) {
+            diagR += b[x][y2][key] === val ? 1 : 0;
+        } 
+    };
+    return { rows, cols, diagL, diagR };
 }
