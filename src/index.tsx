@@ -20,9 +20,7 @@ const requiredVersions: any = {
     </>;
     if ( binfo ) {
         const rversion: string = requiredVersions[binfo.name];
-        console.log(binfo, {rversion})
         if ( rversion ) {
-            console.log(binfo.version > rversion)
             if ( binfo.version > rversion ) {
                 const TextBanner = (await import("~/components/TextBanner")).default;
                 const Modal = (await import("~/components/Modal")).default;

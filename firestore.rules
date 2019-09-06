@@ -1,7 +1,15 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write;
+    match /games/{gameid} {
+			allow create: if 
+        request.resource.data.users is list &&
+        request.resource.data.users.size() == 2 &&
+        request.resource.data.state is list;
+      
+      allow read;
+  
+      allow update: if request.auth.uid == resource.data.current;
+
     }
   }
 }

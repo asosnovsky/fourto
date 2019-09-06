@@ -69,14 +69,16 @@ async function genSecPhrase(uid: string): Promise<string> {
     }
 }
 function startGameListener() {
-    let isFirst = false;
     gamelistener = gamedb.where(`users`, 'array-contains', uid).
     where('winState.won', '==', false).
     where('started', ">=" , Date.now() - 24*60*60*1000).
     orderBy('started', "desc").
     limit(1).
     onSnapshot( async snap => {
-        if( snap.docs.length > 0 ) {
+        if( !(
+            (history.location.pathname.indexOf("/online/") === 0) ||
+            (history.location.pathname.indexOf("/local-multiplayer") === 0)
+        ) && (snap.docs.length > 0) ) {
             const game = snap.docs[0];
             const gameData = game.data();
             const ouid = (gameData["users"] as string[]).filter( u => u !== uid )[0];
@@ -92,7 +94,8 @@ function startGameListener() {
                 </div>
                 <div className="modal-content-btns">
                     <button className="green" onClick={() => {
-                        history.replace("/online/" + game.id);
+                        history.push("/online/" + game.id);
+                        modalState.show = false;
                     }}>Accept</button>
                     <button className="red" onClick={() => {
                         modalState.show = false;
