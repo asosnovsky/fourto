@@ -93,7 +93,7 @@
             grid-row: 1;
             width: 100%;
             display: grid;
-            grid-template-columns: 9em 5em 5em 5em;
+            grid-template-columns: 7em 5em 5em 3em;
             .table-cell {
                 background: #0002;
             }
@@ -104,7 +104,7 @@
             &-row {
                 width: 100%;
                 display: grid;
-                grid-template-columns: 2em 7em 5em 5em 5em;
+                grid-template-columns: 2em 5em 5em 5em 3em;
                 button {
                     margin-top: 1.5em;
                     height: 3em;
