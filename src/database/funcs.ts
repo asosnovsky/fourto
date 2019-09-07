@@ -18,7 +18,7 @@ export function getAliases(): {p1: string, p2: string} {
     return out;
 } 
 
-export async function createGameThenGoToIt(opuid: string, opnName: string = "Player 2") {
+export async function createGameThenGoToIt(opuid: string) {
     const uid = await getUID();
     const update: any = {
         users: [

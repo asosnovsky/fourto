@@ -9,6 +9,7 @@ import MainPage from './pages/MainPage';
 import SinglePlayerGamePage from './pages/SinglePlayerGame';
 import OnlineMultiplayerSetupPage from './pages/OnlineMultiplayerSetup';
 import OnlineMultiplayerPage from './pages/OnlineMultiplayer';
+import InviteAcceptPage from './pages/InviteAccept';
 
 export const history = createBrowserHistory();
 
@@ -31,6 +32,7 @@ export default class AppRouter extends React.Component {
                     <SinglePlayerGamePage path="/singleplayer"/>
                     <OnlineMultiplayerSetupPage path="/online" exact/>
                     <Route path="/online/:gameid" excat component={OnlineMultiplayerPage}/>
+                    <Route path="/e/:sphrase" excat component={InviteAcceptPage}/>
                     <NotFoundPage path="*"/>
                 </Switch>
             </Router>

@@ -9,7 +9,7 @@ button, .button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
+    
     &:hover {
         background: #e4e3e324;
         cursor: pointer;
@@ -48,4 +48,52 @@ button, .button {
             background: #0F0A
         }
     }
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+
+    &-text {
+        visibility: hidden;
+        width: 140px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    &-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    &-qsm {
+        border: 1px solid #F009;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        font-size: 10px;
+        background: #FFF;
+    }
+    
+    &:hover .tooltip-text, &.active .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    } 
 }

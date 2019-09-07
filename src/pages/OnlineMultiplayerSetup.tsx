@@ -13,12 +13,21 @@ import { modalState } from '~/components/Modal';
 import { bannerState } from '~/components/TextBanner';
 import { nameState } from '~/state/name';
 import { observer } from 'mobx-react';
+import Tooltip from '~/components/Tooltip';
 
 function QRDisplayer(p : { code?: string; }) {
+    const eviteLink = window.location.origin + "/e/" + p.code;
     return <>
         <div id="qr-loader"><Loader/></div>
-        {p.code && <QRCode value={p.code}/>}
-        <div id="qr-code">{p.code}</div>
+        {p.code && <QRCode value={eviteLink}/>}
+        <div id="qr-code">
+            {p.code} 
+            <Tooltip msg="Share this passphrase with somone, so that they may enter it at the 'Join by phrase' button and play with you!"/>
+        </div>
+        <a href={eviteLink} target="_blank" id="qr-link">
+            {eviteLink} 
+            <Tooltip msg="Share this link with someone to start a new game"/>
+        </a>
     </>
 } 
 
@@ -42,11 +51,13 @@ export default class OnlineMultiplayerSetupPage extends Route {
         passphrase?: string; 
         games: GameMetaData[]; 
         opnSPhrase?: string;
+        ouid?: string;
     } = { games: [] };
 
     removeListener: () => void; 
 
     async componentDidMount() {
+        this.setState({ ouid: await getUID() });
         await Promise.all([
             getSecretPhrase().then( sphrase => this.setState({
                 passphrase: sphrase
@@ -88,6 +99,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
         let qrCls = "qr";
         if ( this.state.passphrase ) { qrCls += " --loaded"};
         const numOfGames = this.state.games.length;
+        // const eviteLink = window.location.origin + "/e/" + this.state.ouid;
         return <div id="online-multiplayer-setup-page">
             <div className="name-tab">
                 <NameTag/>
@@ -136,7 +148,7 @@ export default class OnlineMultiplayerSetupPage extends Route {
                     bannerState.warn("WIP - coming soon!", 3000);
                 }}>Scan</button>
             </div>
-            <div className={qrCls}>
+            <div className={qrCls} style={{textAlign: "center"}}>
                 <QRDisplayer code={this.state.passphrase}/>
             </div>
             {(numOfGames > 0) && <div className="table">

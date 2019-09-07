@@ -1,5 +1,8 @@
-export const version = "1.1.13";
+export const version = "1.1.14";
 export default `
+1.1.14 - online share link
+1.1.14 - new icons
+1.1.14 - new manifest file
 1.1.13 - better AI for single player
 1.1.12 - can delete games
 1.1.12 - styling fixes
