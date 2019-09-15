@@ -1,5 +1,6 @@
-export const version = "1.1.15";
+export const version = "1.1.16";
 export default `
+1.1.16 - rebranding
 1.1.15 - fixed online multiplayer sync
 1.1.14 - online share link
 1.1.14 - new icons

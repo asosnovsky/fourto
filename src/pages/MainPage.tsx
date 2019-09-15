@@ -4,7 +4,6 @@ import { history } from "~/router";
 
 import "./MainPage.scss";
 import { modalState } from '~/components/Modal';
-import manifest from "~/manifest.json";
 import { deleteAllCookies } from '~/cookie';
 import { auth } from '~/database/index';
 
@@ -16,7 +15,7 @@ export default class MainPage extends Route {
     public render() {
         return <div id="main-page">
             <h1>
-                {"FourTO".split("").map( (l, i) => <span key={i} id={`k${i}`}>{l}</span>)}
+                {"MatMo".split("").map( (l, i) => <span key={i} id={`k${i}`}>{l}</span>)}
                 <i>{version}</i>
             </h1>
             <div className="btns">
