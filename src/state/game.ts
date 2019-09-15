@@ -68,7 +68,8 @@ export class GameState {
         };
         this.currentTurn = alreadyPlayed.length;
         this.winState = data['winState'];
-        this.lastPiece = null;
+        this.lastPiece = data['lastPiece'];
+        this.stagePiece = data['stagePiece'];
 
         const uid = await getUID();
         this.currentPlayer = data['current'] === uid ? 0 : 1;

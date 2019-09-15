@@ -10,14 +10,14 @@ import BottomBar from '~/components/BottomBar';
 
 import "./Game.scss";
 import { GameState } from '~/state/game';
-import { gamedb, aliasdb, createGameThenGoToIt, setPopUpStatus, sphrasedb } from '~/database/index';
+import { gamedb, aliasdb, createGameThenGoToIt, setPopUpStatus, sphrasedb, getUID } from '~/database/index';
 import { history } from '~/router';
 import { bannerState } from '~/components/TextBanner';
 import Loader from '~/components/Loader';
 
 @observer
 export default class OnlineMultiplayerPage extends React.Component<RouteComponentProps<{ gameid: string }>> {
-    state: { opnUid?: string, loaded: boolean } = { loaded: false }
+    state: { opnUid?: string, myUid?: string, loaded: boolean } = { loaded: false }
     localGameState = new GameState();
     gameDoc: firebase.firestore.DocumentReference;
     lastUpdate: number;
@@ -27,47 +27,58 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
         const snap = await this.gameDoc.get()
         const data = snap.data();
         const ouid = await this.localGameState.resetFromSnap(snap.id, data);
-        this.setState({ opnUid: ouid });
+        this.setState({ opnUid: ouid, myUid: await getUID() });
         this.lastUpdate = Date.now();
 
         const unsubGameDoc = this.gameDoc.onSnapshot( snap => {
             if (this.lastUpdate < snap.get("updated")) {
                 const lastMove = snap.get("lastMove");
                 if( lastMove ) {
-                    if (lastMove[0] === "p") {
-                        this.localGameState.placeGamePiece(lastMove[1], lastMove[2]);
-                    }   else if (lastMove[0] === "g") {
-                        this.localGameState.givePiece(lastMove[1], () => {
+                    const [mType, ...mAction] = lastMove;
+                    if (mType === "p") {
+                        this.localGameState.placeGamePiece(mAction[0], mAction[1]);
+                    }   else if (mType === "g") {
+                        this.localGameState.givePiece(mAction[0], () => {
                             history.push("/online");
                         });
+                    }   else if (mType === 'u') {
+                        this.localGameState.undo();
                     }   else    {
                         bannerState.confirm(
-                            `Error: lastMove = ${lastMove[0]} Invalid Move. Exit Game?`,
+                            `Error: lastMove = ${mType} Invalid Move. Exit Game?`,
                             () => history.push("/online")
                         )
                     }
                 }
                 this.lastUpdate = snap.get("updated");
                 this.localGameState.currentPlayer = snap.get("current") === ouid ? 1 : 0;
+                this.localGameState.stagePiece = snap.get('stagePiece');
+                this.localGameState.lastPiece = snap.get('lastPiece');
             }
         });
         const p2aliasListener = aliasdb.child(ouid).on('value', snap => {
             this.localGameState.p2name = snap.val();
         });
-        // const unsubOtherPlayer = sphrasedb.child(`/utp/${ouid}`).on('value', snap => {
-        //     if(!snap.val()) {
-        //         bannerState.notify(`${this.localGameState.p2name} has went offline!`)
-        //     }
-        // });
         this.unsub = () => {
             unsubGameDoc();
             aliasdb.child(ouid).off('value', p2aliasListener);
-            // sphrasedb.child(`/utp/${ouid}`).on('value', unsubOtherPlayer);
         };
         this.setState({ loaded: true });
     }
     componentWillUnmount() {
         this.unsub();
+    }
+    async updateRemote(moveType: "u" | "g" | "p", move: any[] = []) {
+        this.lastUpdate = Date.now();
+        return await this.gameDoc.update({
+            "lastMove": [moveType, ...move],
+            "state": this.localGameState.toStateStrings(),
+            "winState": this.localGameState.winState,
+            "stagePiece": this.localGameState.stagePiece,
+            "lastPiece": this.localGameState.lastPiece,
+            "current": this.localGameState.currentPlayer === 0 ? this.state.myUid : this.state.opnUid,
+            "updated": this.lastUpdate,
+        });
     }
     render() {
         const cState = this.localGameState.currentStage;
@@ -101,9 +112,9 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
             <Navbar
                 msg="Going back to main page, you can always revisit this game after in the online page."
                 onResetGame={() => history.push('/online')}
-                onUndo={() => runIf(() => {
-                    // this.localGameState.undo()
-                    bannerState.notify("WIP - coming soon (not supported in online mode yet)", 3000);
+                onUndo={() => runIf(async () => {
+                    this.localGameState.undo();
+                    await this.updateRemote("u");                    
                 })}
             />
             <BottomBar gameStateStage={cState} currentPlayer={cpName} otherPlayer={opName}/>
@@ -114,13 +125,7 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
                 highlighted={cState === "place-piece"}
                 onPlace={(x,y) => runIf(async () => {
                     this.localGameState.placeGamePiece(x,y);
-                    this.lastUpdate = Date.now();
-                    await this.gameDoc.update({
-                        "lastMove": ['p', x, y],
-                        "state": this.localGameState.toStateStrings(),
-                        "winState": this.localGameState.winState,
-                        "updated": this.lastUpdate,
-                    });
+                    await this.updateRemote("p", [x, y]);   
                 })}
             />
             <OpenPieces 
@@ -128,17 +133,8 @@ export default class OnlineMultiplayerPage extends React.Component<RouteComponen
                 focusPiece={this.localGameState.stagePiece}
                 highlighted={cState === "select-piece"}
                 onTake={i => runIf(async () => {
-                    this.localGameState.givePiece(i, () => {
-                        history.push("/online");
-                    });
-                    this.lastUpdate = Date.now();
-                    await this.gameDoc.update({
-                        "lastMove": ['g', i],
-                        "state": this.localGameState.toStateStrings(),
-                        "winState": this.localGameState.winState,
-                        "updated": this.lastUpdate,
-                        "current": this.state.opnUid,
-                    });
+                    this.localGameState.givePiece(i, () => history.push("/online") );
+                    await this.updateRemote("g", [ i ]);
                 }}
             />
         </div>
