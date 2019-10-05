@@ -91,33 +91,16 @@
             }
         }
     }
-    .legal {
+    .bottom-buttons {
         position: absolute;
         right: 0;
-        bottom: 0;
-        font-size: 0.5em;
-        @media (orientation:landscape) {
-            height: 1em;
-            width: 5em;
-        }
-        @media (orientation:portrait) {
+        bottom: 5px;
+        display: flex;
+        button {
+            font-size: 0.6em;
             height: 2em;
-            width: 5em;
-        }
-    }
-    .update-btn {
-        position: absolute;
-        bottom: 0;
-        font-size: 0.5em;
-        @media (orientation:landscape) {
-            height: 1em;
-            width: 5em;
-            right: 6em;
-        }
-        @media (orientation:portrait) {
-            height: 2em;
-            width: 5em;
-            right: 6em;
+            width: 6em;
+            margin-right: 15px;
         }
     }
 }

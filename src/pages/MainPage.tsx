@@ -31,35 +31,37 @@ export default class MainPage extends Route {
                     </li>)} 
                 </ul>
             </div>
-            <button className="legal" onClick={() => {
-                modalState.ask( () => <> 
-                    <div className="modal-content-inner">
-                        By using this application the user agrees to the following data being collected:
-                        <p style={{textAlign: "center"}}>
-                            <i>
-                                During gameplay anytime the user presses a gamepiece the choice of the user is collected
-                            </i>
-                        </p>
-                        <p style={{textAlign: "center"}}>
-                            <b>All data collected <u>does not</u> include any personal information of the user</b>.
-                        </p>
-                        <button className="blue" onClick={() => {
-                            modalState.show = false;
-                        }}>Okay</button>
-                        <button className="red" onClick={async () => {
-                            deleteAllCookies();
-                            localStorage.clear();
-                            await auth.signOut();
-                            window.location.reload(true);
-                        }}>Clear all the references to me</button>
-                    </div>
-                </>)
-            }}>Legal</button>
-            <button className="update-btn" onClick={() => {
-                deleteAllCookies();
-                localStorage.clear();
-                window.location.reload(true);
-            }}>Update</button>
+            <div className="bottom-buttons">
+                <button className="legal" onClick={() => {
+                    modalState.ask( () => <> 
+                        <div className="modal-content-inner">
+                            By using this application the user agrees to the following data being collected:
+                            <p style={{textAlign: "center"}}>
+                                <i>
+                                    During gameplay anytime the user presses a gamepiece the choice of the user is collected
+                                </i>
+                            </p>
+                            <p style={{textAlign: "center"}}>
+                                <b>All data collected <u>does not</u> include any personal information of the user</b>.
+                            </p>
+                            <button className="blue" onClick={() => {
+                                modalState.show = false;
+                            }}>Okay</button>
+                            <button className="red" onClick={async () => {
+                                deleteAllCookies();
+                                localStorage.clear();
+                                await auth.signOut();
+                                window.location.reload(true);
+                            }}>Clear all the references to me</button>
+                        </div>
+                    </>)
+                }}>Legal</button>
+                <button className="update-btn" onClick={() => {
+                    deleteAllCookies();
+                    localStorage.clear();
+                    window.location.reload(true);
+                }}>Update</button>
+            </div>
         </div>
     }
 }

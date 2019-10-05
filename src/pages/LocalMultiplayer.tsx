@@ -12,6 +12,7 @@ import "./Game.scss";
 import { GameState } from '~/state/game';
 import { modalState } from '~/components/Modal';
 import { nameState } from '~/state/name';
+import { history } from '~/router';
 
 @observer
 export default class LocalMultiplayerPage extends Route {
@@ -23,18 +24,26 @@ export default class LocalMultiplayerPage extends Route {
             modalState.show = false;
             this.localGameState.reset(nameState.p1name, nameState.p2name);
         };
+        const goback = () => {
+            history.push("/"); 
+            modalState.show = false;
+        }
         modalState.ask(observer( () => <>
-            <div className="modal-inner">
-                Player 1: <input type="text" value={nameState.p1name} onChange={e => {
-                    console.log(e.target.value);
-                    nameState.p1name = e.target.value;
-                }} />
-                Player 2: <input type="text" value={nameState.p2name} onChange={e => {
-                    nameState.p2name = e.target.value;
-                }} />
+            <div className="modal-content-inner">
+                <div className="modal-content-inner-row">
+                    Player 1: <input type="text" value={nameState.p1name} onChange={e => {
+                        nameState.p1name = e.target.value;
+                    }} />
+                </div>
+                <div className="modal-content-inner-row">
+                    Player 2: <input type="text" value={nameState.p2name} onChange={e => {
+                        nameState.p2name = e.target.value;
+                    }} />
+                </div>
             </div>
-            <div className="modal-btns">
-                <button onClick={() => done()}>Start!</button>
+            <div className="modal-content-btns">
+                <button className="green" onClick={done}>Start!</button>
+                <button className="red" onClick={goback}>Go Back</button>
             </div>
         </>), done)
     }

@@ -1,5 +1,8 @@
-export const version = "1.1.16";
+export const version = "1.1.18";
 export default `
+1.1.18 - corrected some sizing issues
+1.1.18 - rebranding
+1.1.17 - correct credentials
 1.1.16 - rebranding
 1.1.15 - fixed online multiplayer sync
 1.1.14 - online share link

@@ -48,10 +48,15 @@
         &-inner {
             grid-area: i;
             margin-bottom: 5%;
+            &-row {
+                width: 98%;
+                padding: 1%;
+            }
         }
         &-btns {
             grid-area: b;
             justify-items: center;
+            align-items: center;
             display: grid;
             grid-template-columns: auto;
             button {
