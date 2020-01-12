@@ -8,6 +8,7 @@ const requiredVersions: any = {
     "chrome": "57.0",
     "edge": "16.0",
     "firefox": "52.0",
+    "fxios": "21.0",
     "safari": "10",
     "opera": "44",
     "ios": "10.0"
@@ -18,33 +19,33 @@ const requiredVersions: any = {
         <h1>Invalid Browser</h1>
         <a href="https://updatemybrowser.org/">Please install a modern browser.</a>
     </>;
-    if ( binfo ) {
+    if (binfo) {
         const rversion: string = requiredVersions[binfo.name];
-        if ( rversion ) {
-            if ( binfo.version > rversion ) {
+        if (rversion) {
+            if (binfo.version > rversion) {
                 const TextBanner = (await import("~/components/TextBanner")).default;
                 const Modal = (await import("~/components/Modal")).default;
                 const AppRouter = (await import("~/router")).default;
                 App = <>
-                    <Modal/>
-                    <TextBanner/>
-                    <AppRouter/>
+                    <Modal />
+                    <TextBanner />
+                    <AppRouter />
                 </>;
-            }   else    {
+            } else {
                 App = <>
                     <h1>Please update browser</h1>
                     <p>
-                        Current: {binfo.name} {binfo.version} <br/>
+                        Current: {binfo.name} {binfo.version} <br />
                         Requires: {binfo.name} {rversion}+
                     </p>
                     <a href="https://updatemybrowser.org/">Please update your browser.</a>
                 </>;
             }
-        }   else    {
+        } else {
             App = <>
                 <h1>Invalid browser</h1>
                 <p>
-                    Current: {binfo.name} {binfo.version} <br/>
+                    Current: {binfo.name} {binfo.version} <br />
                     Requires: <a href="https://updatemybrowser.org/">Modern Browser</a>
                 </p>
             </>;
@@ -52,3 +53,15 @@ const requiredVersions: any = {
     }
     render(App, document.getElementById("app"));
 })()
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./service-worker.ts').then(function (registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ' + registration.scope);
+        }, function (err) {
+            // registration failed :(
+            console.error('ServiceWorker registration failed: ' + err);
+        });
+    });
+}

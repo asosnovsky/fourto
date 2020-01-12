@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,9 +11,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="application-name" content="MatMo">
   <meta name="apple-mobile-web-app-title" content="MatMo">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="msapplication-starturl" content="/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
+  <meta name="msapplication-TileColor" content="#008eff">
+  <meta name="msapplication-TileImage" content="/assets/ms-icon-144x144.png">
+  <meta name="theme-color" content="#008eff">
+
+
   <link rel="apple-touch-icon" sizes="57x57" href="/assets/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="/assets/apple-icon-60x60.png">
   <link rel="apple-touch-icon" sizes="72x72" href="/assets/apple-icon-72x72.png">
@@ -22,18 +28,41 @@
   <link rel="apple-touch-icon" sizes="144x144" href="/assets/apple-icon-144x144.png">
   <link rel="apple-touch-icon" sizes="152x152" href="/assets/apple-icon-152x152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-icon-192x192.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-  <meta name="msapplication-TileColor" content="#008eff">
-  <meta name="msapplication-TileImage" content="/assets/ms-icon-144x144.png">
-  <meta name="theme-color" content="#008eff">
-  
+
+  <!-- <link href="/apple_splash_2048.png" sizes="2048x2732" rel="apple-touch-startup-image" />
+  <link href="/apple_splash_1668.png" sizes="1668x2224" rel="apple-touch-startup-image" />
+  <link href="/apple_splash_1536.png" sizes="1536x2048" rel="apple-touch-startup-image" />
+  <link href="/apple_splash_1125.png" sizes="1125x2436" rel="apple-touch-startup-image" />
+  <link href="/apple_splash_1242.png" sizes="1242x2208" rel="apple-touch-startup-image" />
+  <link href="/apple_splash_750.png" sizes="750x1334" rel="apple-touch-startup-image" />
+  <link href="/apple_splash_640.png" sizes="640x1136" rel="apple-touch-startup-image" /> -->
+
   <link rel="stylesheet" href="index.scss">
 </head>
+
 <body>
   <div id="app"></div>
   <script src="index.tsx"></script>
+  <script>
+    // Detects if device is on iOS 
+    const isIos = () => {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test(userAgent);
+    }
+    // Detects if device is in standalone mode
+    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+    // Checks if should display install popup notification:
+    if (isIos() && !isInStandaloneMode()) {
+      this.setState({
+        showInstallMessage: true
+      });
+    }
+  </script>
 </body>
+
 </html>

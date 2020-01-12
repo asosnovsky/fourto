@@ -1,5 +1,6 @@
-export const version = "1.1.18";
+export const version = "1.1.19";
 export default `
+1.1.19 - added firefox iOS support
 1.1.18 - corrected some sizing issues
 1.1.18 - rebranding
 1.1.17 - correct credentials
@@ -28,4 +29,4 @@ export default `
 1.1.3 - Visual bugfixes (no more side-scrolling error)
 1.1.1 - Browser version checker (if your browser version is incompatible an error will show up)
 1.1.1 - Added legal notes
-`.split('\n').filter( n => n.trim() !== "" )
+`.split('\n').filter(n => n.trim() !== "")
